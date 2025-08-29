@@ -125,45 +125,47 @@ function ShoppingHome() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="relative w-full h-[600px] overflow-hidden">
-        {featureImageList && featureImageList.length > 0
-          ? featureImageList.map((slide, index) => (
-              <img
-                src={slide?.image}
-                key={index}
-                className={`${
-                  index === currentSlide ? "opacity-100" : "opacity-0"
-                } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
-              />
-            ))
-          : null}
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() =>
-            setCurrentSlide(
-              (prevSlide) =>
-                (prevSlide - 1 + featureImageList.length) %
-                featureImageList.length
-            )
-          }
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
-        >
-          <ChevronLeftIcon className="w-4 h-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() =>
-            setCurrentSlide(
-              (prevSlide) => (prevSlide + 1) % featureImageList.length
-            )
-          }
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
-        >
-          <ChevronRightIcon className="w-4 h-4" />
-        </Button>
-      </div>
+      <div className="relative w-full h-[250px] sm:h-[350px] md:h-[500px] lg:h-[600px] overflow-hidden">
+  {featureImageList && featureImageList.length > 0
+    ? featureImageList.map((slide, index) => (
+        <img
+          src={slide?.image}
+          key={index}
+          className={`${
+            index === currentSlide ? "opacity-100" : "opacity-0"
+          } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
+        />
+      ))
+    : null}
+
+  {/* Prev Button */}
+  <Button
+    variant="outline"
+    size="icon"
+    onClick={() =>
+      setCurrentSlide(
+        (prevSlide) =>
+          (prevSlide - 1 + featureImageList.length) % featureImageList.length
+      )
+    }
+    className="absolute top-1/2 left-2 sm:left-4 transform -translate-y-1/2 bg-white/80 p-1 sm:p-2"
+  >
+    <ChevronLeftIcon className="w-4 h-4 sm:w-6 sm:h-6" />
+  </Button>
+
+  {/* Next Button */}
+  <Button
+    variant="outline"
+    size="icon"
+    onClick={() =>
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length)
+    }
+    className="absolute top-1/2 right-2 sm:right-4 transform -translate-y-1/2 bg-white/80 p-1 sm:p-2"
+  >
+    <ChevronRightIcon className="w-4 h-4 sm:w-6 sm:h-6" />
+  </Button>
+</div>
+
       {/* --- ABOUT US SECTION - MODIFIED --- */}
       <section className="py-12 bg-[#f8f8f8]" id="aboutus">
         <div className="container mx-auto px-4">
@@ -364,12 +366,12 @@ function ShoppingHome() {
               <h4 className="text-lg font-semibold mb-4 uppercase">Company</h4>
               <ul className="space-y-2">
                 <li>
-                  <a href="#about" className="text-gray-300 hover:text-white transition-colors">
+                  <a href="#aboutus" className="text-gray-300 hover:text-white transition-colors">
                     Our Services
                   </a>
                 </li>
                 <li>
-                  <a href="#about" className="text-gray-300 hover:text-white transition-colors">
+                  <a href="#aboutus" className="text-gray-300 hover:text-white transition-colors">
                     Privacy Policy
                   </a>
                 </li>
@@ -423,7 +425,7 @@ function ShoppingHome() {
                   </a>
                 </li>
                 <li>
-                  <a href="/shop/listing" className="text-gray-300 hover:text-white transition-colors">
+                  <a href="#aboutus" className="text-gray-300 hover:text-white transition-colors">
                     Certification
                   </a>
                 </li>

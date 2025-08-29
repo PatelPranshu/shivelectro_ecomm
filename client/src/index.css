@@ -72,25 +72,3 @@
 
 
 
-.beta-ribbon {
-  /* Basic Styling */
-  width: 180px;
-  height: 50px;
-  padding-top: 20px;
-  background: #5D9CEC; /* A blue similar to your image */
-  color: #000;
-  text-align: center;
-  font-family: sans-serif;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 2; /* Creates vertical spacing for the text */
-  text-shadow: 0 1px 1px rgba(255,255,255,0.2); /* Adds a subtle highlight to text */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Adds a drop shadow to the ribbon */
-
-  /* Positioning and Rotation */
-  position: fixed;
-  z-index: 9999; /* Ensures the ribbon is on top of other content */
-  top: -10px;      /* Adjust to move vertically */
-  left: 260px;     /* Adjust to move horizontally */
-  /* transform: rotate(-45deg); */
-} 
