@@ -18,8 +18,6 @@ const commonFeatureRouter = require("./routes/common/feature-routes");
 require('dotenv').config();
 const dbHost = process.env.DB_HOST;
 
-//create a database connection -> u can also
-//create a separate file for this and then import/use that file here
 
 mongoose
   .connect(dbHost)
@@ -31,7 +29,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://shivelectro.vercel.app",
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-Type",
