@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-// We no longer need the Razorpay logic in this file
+
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -53,7 +53,7 @@ function ShoppingCheckout() {
       totalAmount: totalCartAmount,
     };
 
-    // 2. Navigate to the new payment page, passing the data via state
+
     navigate('/shop/payment', { 
       state: { 
         orderPayload, 
@@ -85,7 +85,7 @@ function ShoppingCheckout() {
             </div>
           </div>
           <div className="mt-4 w-full">
-            {/* The button text is updated to reflect the next step */}
+
             <Button onClick={handleCheckout} className="w-full">
               Proceed to Payment
             </Button>

@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "../ui/use-toast";
+import { useNavigate } from "react-router-dom"; 
 import { setProductDetails } from "@/store/shop/products-slice";
 import { Label } from "../ui/label";
 import StarRatingComponent from "../common/star-rating";
@@ -19,7 +20,8 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
 
@@ -32,6 +34,16 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   }
 
   function handleAddToCart(getCurrentProductId, getTotalStock) {
+    if (!isAuthenticated) {
+      toast({
+        title: "Please log in",
+        description: "You need to log in to add items to your cart.",
+        variant: "destructive",
+      });
+      navigate('/auth/login');
+      handleDialogClose(); // Close the dialog after redirecting
+      return;
+    }
     let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {

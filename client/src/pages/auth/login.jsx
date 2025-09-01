@@ -19,14 +19,18 @@ function AuthLogin() {
   function onSubmit(event) {
     event.preventDefault();
 
-    dispatch(loginUser(formData)).then((data) => {
-      if (data?.payload?.success) {
+    dispatch(loginUser(formData)).then((result) => {
+
+      if (loginUser.fulfilled.match(result)) {
         toast({
-          title: data?.payload?.message,
+          title: result.payload.message,
         });
       } else {
+
         toast({
-          title: data?.payload?.message,
+          title: "Login Failed",
+
+          description: result.payload?.message || result.payload,
           variant: "destructive",
         });
       }
@@ -40,7 +44,7 @@ function AuthLogin() {
           Sign in to your account
         </h1>
         <p className="mt-2">
-          Don't have an account
+          Don&#39;t have an account
           <Link
             className="font-medium ml-2 text-primary hover:underline"
             to="/auth/register"

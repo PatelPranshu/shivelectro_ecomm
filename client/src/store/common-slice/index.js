@@ -30,6 +30,18 @@ export const addFeatureImage = createAsyncThunk(
   }
 );
 
+export const deleteFeatureImage = createAsyncThunk(
+  "/common/deleteFeatureImage",
+  async (id, thunkAPI) => {
+    try {
+      const response = await api.delete(`/common/feature/${id}`);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const commonSlice = createSlice({
   name: "commonSlice",
   initialState,

@@ -59,7 +59,7 @@ export const addProductFormElements = [
     componentType: "select",
     options: [
       { id: "elcb", label: "ELCB" },
-      { id: "elcbmcb", label: "ELCB+LCB" },
+      { id: "elcbmcb", label: "ELCB+MCB" },
       { id: "ol", label: "Overload" },
       { id: "timer", label: "Timer" },
       { id: "mbs", label: "Mobile Operated Switch" },
@@ -121,11 +121,6 @@ export const shoppingViewHeaderMenuItems = [
     path: "/shop/home/#contact",
   },
   {
-    id: "accessories",
-    label: "Accessories",
-    path: "/shop/listing",
-  },
-  {
     id: "search",
     label: "Search",
     path: "/shop/search",
@@ -134,7 +129,7 @@ export const shoppingViewHeaderMenuItems = [
 
 export const categoryOptionsMap = {
   elcb: "ELCB",
-  elcbmcb: "ELCB+LCB",
+  elcbmcb: "ELCB+MCB",
   ol: "Overload",
   timer: "Timer",
   mbs: "Mobile Operated Switch",
@@ -151,7 +146,7 @@ export const brandOptionsMap = {
 export const filterOptions = {
   category: [
     { id: "elcb", label: "ELCB" },
-    { id: "elcbmcb", label: "ELCB+LCB" },
+    { id: "elcbmcb", label: "ELCB+MCB" },
     { id: "ol", label: "Overload" },
     { id: "timer", label: "Timer" },
     { id: "mbs", label: "Mobile Operated Switch" },

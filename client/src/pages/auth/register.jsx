@@ -20,15 +20,18 @@ function AuthRegister() {
 
   function onSubmit(event) {
     event.preventDefault();
-    dispatch(registerUser(formData)).then((data) => {
-      if (data?.payload?.success) {
+    dispatch(registerUser(formData)).then((result) => {
+
+      if (registerUser.fulfilled.match(result)) {
         toast({
-          title: data?.payload?.message,
+          title: result.payload.message,
         });
         navigate("/auth/login");
       } else {
+
         toast({
-          title: data?.payload?.message,
+          title: "Registration Failed",
+          description: result.payload?.message || result.payload,
           variant: "destructive",
         });
       }

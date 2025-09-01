@@ -11,32 +11,32 @@ const initialState = {
 export const registerUser = createAsyncThunk(
   "/auth/register",
 
-  async (formData) => {
-    const response = await api.post(
-      "/auth/register",
-      formData,
-      {
+  async (formData, thunkAPI) => {
+    try { 
+      const response = await api.post("/auth/register", formData, {
         withCredentials: true,
-      }
-    );
-
-    return response.data;
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error occurred during registration:", error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const loginUser = createAsyncThunk(
   "/auth/login",
 
-  async (formData) => {
-    const response = await api.post(
-      "/auth/login",
-      formData,
-      {
+   async (formData, thunkAPI) => {
+    try {
+      const response = await api.post("/auth/login", formData, {
         withCredentials: true,
-      }
-    );
-
-    return response.data;
+      });
+      return response.data;
+    } catch (error) { 
+      console.error("Error occurred during login:", error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 

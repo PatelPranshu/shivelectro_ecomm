@@ -2,9 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle, SheetDescription } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
+import { useSelector } from "react-redux";
 
 function UserCartWrapper({ cartItems, setOpenCartSheet }) {
   const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const totalCartAmount =
     cartItems && cartItems.length > 0
@@ -18,6 +20,17 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
           0
         )
       : 0;
+
+  function handleCheckout() {
+    setOpenCartSheet(false); // Close the cart first
+
+    // Check if the user is logged in
+    if (isAuthenticated) {
+      navigate("/shop/checkout"); // If yes, proceed to checkout
+    } else {
+      navigate("/auth/login"); // If no, redirect to the login page
+    }
+  }
 
   return (
     <SheetContent className="sm:max-w-md">
@@ -39,11 +52,10 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
         </div>
       </div>
       <Button
-        onClick={() => {
-          navigate("/shop/checkout");
-          setOpenCartSheet(false);
-        }}
+        // ✅ 4. USE the new handler function
+        onClick={handleCheckout}
         className="w-full mt-6"
+        disabled={!cartItems || cartItems.length === 0}
       >
         Checkout
       </Button>
