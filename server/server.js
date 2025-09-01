@@ -19,6 +19,7 @@ const commonFeatureRouter = require("./routes/common/feature-routes");
 require('dotenv').config();
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(helmet());
 const PORT = process.env.PORT || 5000;
 const dbHost = process.env.DB_HOST;
