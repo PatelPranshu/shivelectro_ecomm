@@ -34,7 +34,7 @@ function AdminDashboard() {
    function handleDeleteFeatureImage(getId) {
     dispatch(deleteFeatureImage(getId)).then((data) => {
       if (data?.payload?.success) {
-        dispatch(getFeatureImages()); // Refresh the list
+        dispatch(getFeatureImages());
         toast({
           title: "Success",
           description: "Image deleted successfully.",
