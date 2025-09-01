@@ -38,7 +38,7 @@ function PaymentPage() {
           key: import.meta.env.VITE_RAZORPAY_KEY_ID,
           amount: razorpayOrder.amount,
           currency: razorpayOrder.currency,
-          name: "Your E-Commerce Store",
+          name: "Shivelectro",
           description: "Final step of your purchase",
           order_id: razorpayOrder.id,
           handler: function (response) {
@@ -62,7 +62,7 @@ function PaymentPage() {
             }
           },
           prefill: { name: user?.name, email: user?.email },
-          theme: { color: "#3399cc" }
+          theme: { color: "#e30045" }
         };
 
         const rzp = new window.Razorpay(options);
