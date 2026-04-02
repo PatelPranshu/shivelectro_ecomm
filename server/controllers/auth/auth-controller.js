@@ -97,6 +97,7 @@ const loginUser = async (req, res) => {
     }).json({
       success: true,
       message: "Logged in successfully",
+      token,
       user: {
         email: checkUser.email,
         role: checkUser.role,
@@ -129,7 +130,8 @@ const logoutUser = (req, res) => {
 
 //auth middleware
 const authMiddleware = async (req, res, next) => {
-  const token = req.cookies.token;
+  const authHeader = req.headers['authorization'];
+  const token = req.cookies.token || (authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null);
   if (!token)
     return res.status(401).json({
       success: false,
