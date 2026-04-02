@@ -155,6 +155,7 @@ function ShoppingHeader() {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const [openSideMenu, setOpenSideMenu] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
@@ -192,7 +193,7 @@ function ShoppingHeader() {
                       className="justify-start gap-4 h-12"
                       onClick={() => {
                         setOpenSideMenu(false);
-                        window.location.href = "/shop/account";
+                        navigate("/shop/account");
                       }}
                     >
                       <Avatar className="h-7 w-7 bg-black">
@@ -208,7 +209,7 @@ function ShoppingHeader() {
                       onClick={() => {
                         dispatch(logoutUser());
                         setOpenSideMenu(false);
-                        window.location.href = "/shop/home";
+                        navigate("/shop/home");
                       }}
                     >
                       <LogOut className="h-5 w-5" />
@@ -220,7 +221,7 @@ function ShoppingHeader() {
                     className="w-full h-12 mt-4"
                     onClick={() => {
                       setOpenSideMenu(false);
-                      window.location.href = "/auth/login";
+                      navigate("/auth/login");
                     }}
                   >
                     Login / Sign up
