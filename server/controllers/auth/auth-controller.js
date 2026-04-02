@@ -89,7 +89,12 @@ const loginUser = async (req, res) => {
       { expiresIn: "60m" }
     );
 
-    res.cookie("token", token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' }).json({
+    res.cookie("token", token, { 
+      httpOnly: true, 
+      secure: true, // Required for sameSite: 'none'
+      sameSite: 'none', // Allows cookie to be sent across different domains
+      maxAge: 3600000 // 1 hour
+    }).json({
       success: true,
       message: "Logged in successfully",
       user: {
@@ -111,7 +116,12 @@ const loginUser = async (req, res) => {
 //logout
 
 const logoutUser = (req, res) => {
-  res.clearCookie("token").json({
+  // Use same attributes as login to ensure the browser identifies the correct cookie to clear
+  res.clearCookie("token", { 
+    httpOnly: true, 
+    secure: true, 
+    sameSite: 'none' 
+  }).json({
     success: true,
     message: "Logged out successfully!",
   });
