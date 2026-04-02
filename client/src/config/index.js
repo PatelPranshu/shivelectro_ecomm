@@ -186,14 +186,19 @@ export const addressFormControls = [
     name: "pincode",
     componentType: "input",
     type: "text",
-    placeholder: "Enter your pincode",
+    placeholder: "Enter 6-digit numeric pincode",
+    maxLength: 6,
+    pattern: "\\d*"
   },
   {
     label: "Phone",
     name: "phone",
     componentType: "input",
     type: "text",
-    placeholder: "Enter your phone number",
+    placeholder: "10-digit number",
+    prefix: "+91",
+    maxLength: 10,
+    pattern: "\\d*"
   },
   {
     label: "Notes",

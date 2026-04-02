@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
@@ -18,28 +20,57 @@ function CommonForm({
   buttonText,
   isBtnDisabled,
 }) {
+  const [showPassword, setShowPassword] = useState(false);
+
   function renderInputsByComponentType(getControlItem) {
     let element = null;
     const value = formData[getControlItem.name] || "";
 
-    switch (getControlItem.componentType) {
-      case "input":
-        element = (
+    const renderInput = () => {
+      const hasPrefix = Boolean(getControlItem.prefix);
+      
+      return (
+        <div className="relative flex items-center">
+          {hasPrefix && (
+            <div className="absolute left-0 flex items-center pl-3 pointer-events-none text-muted-foreground mr-2 font-medium">
+              {getControlItem.prefix}
+            </div>
+          )}
           <Input
             name={getControlItem.name}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
-            type={getControlItem.type}
+            maxLength={getControlItem.maxLength}
+            type={getControlItem.type === "password" && showPassword ? "text" : getControlItem.type}
             value={value}
-            onChange={(event) =>
+            onChange={(event) => {
+              let nextValue = event.target.value;
+              if (getControlItem.pattern === "\\d*") {
+                nextValue = nextValue.replace(/\D/g, ""); // Strip non-numeric
+              }
               setFormData({
                 ...formData,
-                [getControlItem.name]: event.target.value,
-              })
-            }
+                [getControlItem.name]: nextValue,
+              });
+            }}
+            className={`${getControlItem.type === "password" ? "pr-10" : ""} ${hasPrefix ? "pl-11" : ""}`}
           />
-        );
+          {getControlItem.type === "password" && (
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          )}
+        </div>
+      );
+    };
 
+    switch (getControlItem.componentType) {
+      case "input":
+        element = renderInput();
         break;
       case "select":
         element = (
@@ -87,21 +118,7 @@ function CommonForm({
         break;
 
       default:
-        element = (
-          <Input
-            name={getControlItem.name}
-            placeholder={getControlItem.placeholder}
-            id={getControlItem.name}
-            type={getControlItem.type}
-            value={value}
-            onChange={(event) =>
-              setFormData({
-                ...formData,
-                [getControlItem.name]: event.target.value,
-              })
-            }
-          />
-        );
+        element = renderInput();
         break;
     }
 

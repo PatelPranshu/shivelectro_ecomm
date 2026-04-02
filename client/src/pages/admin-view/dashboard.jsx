@@ -14,7 +14,6 @@ function AdminDashboard() {
   const { featureImageList } = useSelector((state) => state.commonFeature);
    const { toast } = useToast(); 
    
-  console.log(uploadedImageUrl, "uploadedImageUrl");
 
   function handleUploadFeatureImage() {
     dispatch(addFeatureImage(uploadedImageUrl)).then((data) => {
@@ -53,7 +52,6 @@ function AdminDashboard() {
     dispatch(getFeatureImages());
   }, [dispatch]);
 
-  console.log(featureImageList, "featureImageList");
 
   return (
       <div>

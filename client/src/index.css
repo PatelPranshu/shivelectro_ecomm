@@ -72,3 +72,52 @@
 
 
 
+/* In client/src/index.css */
+
+/* Advanced lightweight skeleton keyframes */
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+/* Styles for the advanced, lightweight shimmer effect */
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: hsl(var(--muted));
+  /* Breathing pulse combined with GPU-accelerated styling for performance */
+  animation: skeleton-pulse 2s ease-in-out infinite;
+}
+
+/* The moving glassmorphic gradient wave */
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translate3d(-100%, 0, 0);
+  /* Dynamic gradient masking that adapts cleanly to current theme UI */
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--background) / 0.1) 20%,
+    hsl(var(--background) / 0.5) 50%,
+    hsl(var(--background) / 0.1) 80%,
+    transparent 100%
+  );
+  /* Hardware accelerated, infinite smooth ease */
+  animation: skeleton-shimmer 1.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}

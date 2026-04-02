@@ -6,18 +6,23 @@ import { Separator } from "../ui/separator";
 
 function ProductFilter({ filters, handleFilter }) {
   return (
-    <div className="bg-background rounded-lg shadow-sm">
-      <div className="p-4 border-b">
-        <h2 className="text-lg font-extrabold">Filters</h2>
+    <div className="bg-background rounded-xl border shadow-sm sticky top-24">
+      <div className="p-5 border-b bg-muted/10 rounded-t-xl">
+        <h2 className="text-xl font-extrabold tracking-tight">Filters</h2>
       </div>
-      <div className="p-4 space-y-4">
-        {Object.keys(filterOptions).map((keyItem) => (
+      <div className="p-5 space-y-6 max-h-[calc(100vh-150px)] overflow-y-auto">
+        {Object.keys(filterOptions).map((keyItem, idx) => (
           <Fragment key={keyItem}>
             <div>
-              <h3 className="text-base font-bold">{keyItem}</h3>
-              <div className="grid gap-2 mt-2">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                {keyItem}
+              </h3>
+              <div className="grid gap-1">
                 {filterOptions[keyItem].map((option) => (
-                  <Label key={option.id} className="flex font-medium items-center gap-2 ">
+                  <Label 
+                    key={option.id} 
+                    className="flex font-medium items-center gap-3 cursor-pointer p-2 -mx-2 rounded-md hover:bg-muted/50 transition-colors"
+                  >
                     <Checkbox
                       checked={
                         filters &&
@@ -27,12 +32,12 @@ function ProductFilter({ filters, handleFilter }) {
                       }
                       onCheckedChange={() => handleFilter(keyItem, option.id)}
                     />
-                    {option.label}
+                    <span className="text-sm leading-none">{option.label}</span>
                   </Label>
                 ))}
               </div>
             </div>
-            <Separator />
+            {idx < Object.keys(filterOptions).length - 1 && <Separator />}
           </Fragment>
         ))}
       </div>

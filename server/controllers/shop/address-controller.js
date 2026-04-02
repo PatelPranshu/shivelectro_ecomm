@@ -4,10 +4,24 @@ const addAddress = async (req, res) => {
   try {
     const { userId, address, city, pincode, phone, notes } = req.body;
 
-    if (!userId || !address || !city || !pincode || !phone || !notes) {
+    if (!userId || !address?.trim() || !city?.trim() || !pincode || !phone) {
       return res.status(400).json({
         success: false,
-        message: "Invalid data provided!",
+        message: "Mandatory data (Address, City, Pincode, Phone) is missing!",
+      });
+    }
+
+    if (!/^\d{6}$/.test(pincode)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Pincode: Must be exactly 6 digits.",
+      });
+    }
+
+    if (!/^\d{10}$/.test(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Phone: Must be exactly 10 digits.",
       });
     }
 
@@ -69,6 +83,20 @@ const editAddress = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "User and address id is required!",
+      });
+    }
+
+    if (formData.pincode && !/^\d{6}$/.test(formData.pincode)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Pincode: Must be exactly 6 digits.",
+      });
+    }
+
+    if (formData.phone && !/^\d{10}$/.test(formData.phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Phone: Must be exactly 10 digits.",
       });
     }
 

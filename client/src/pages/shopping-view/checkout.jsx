@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -27,7 +28,6 @@ function ShoppingCheckout() {
         )
       : 0;
 
-  // This function is now much simpler
   function handleCheckout() {
     if (!cartItems?.items || cartItems.items.length === 0) {
       toast({ title: "Your cart is empty.", variant: "destructive" });
@@ -53,7 +53,6 @@ function ShoppingCheckout() {
       totalAmount: totalCartAmount,
     };
 
-
     navigate('/shop/payment', { 
       state: { 
         orderPayload, 
@@ -63,33 +62,71 @@ function ShoppingCheckout() {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="w-full text-center mt-4">
-        <h1 className="text-2xl font-bold ml">Checkout</h1>
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="flex flex-col mb-8">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">Checkout</h1>
+        <p className="text-muted-foreground">Complete your order details below to securely finalize your purchase.</p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">
-        <Address
-          selectedId={currentSelectedAddress}
-          setCurrentSelectedAddress={setCurrentSelectedAddress}
-        />
-        <div className="flex flex-col gap-4">
-          {cartItems && cartItems.items && cartItems.items.length > 0
-            ? cartItems.items.map((item) => (
-                <UserCartItemsContent key={item.productId} cartItem={item} />
-              ))
-            : <p>Your cart is empty.</p>}
-          <div className="mt-8 space-y-4">
-            <div className="flex justify-between">
-              <span className="font-bold">Total</span>
-              <span className="font-bold">₹{totalCartAmount.toFixed(2)}</span>
-            </div>
-          </div>
-          <div className="mt-4 w-full">
 
-            <Button onClick={handleCheckout} className="w-full">
-              Proceed to Payment
-            </Button>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        {/* Left Column - Main Flow */}
+        <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-8">
+          
+          {/* Step 1: Items */}
+          <Card className="shadow-sm border-muted">
+            <CardHeader className="bg-muted/10 border-b pb-4">
+              <CardTitle className="text-xl">1. Review Your Items</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="flex flex-col gap-5">
+                {cartItems && cartItems.items && cartItems.items.length > 0
+                  ? cartItems.items.map((item) => (
+                      <UserCartItemsContent key={item.productId} cartItem={item} />
+                    ))
+                  : (
+                    <div className="text-center py-8 bg-muted/20 rounded-lg">
+                      <p className="text-muted-foreground font-medium">Your cart is empty.</p>
+                    </div>
+                  )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Step 2: Address */}
+          <div>
+            <h2 className="text-xl font-bold mb-4">2. Shipping Address</h2>
+            <Address
+              selectedId={currentSelectedAddress}
+              setCurrentSelectedAddress={setCurrentSelectedAddress}
+            />
           </div>
+        </div>
+        
+        {/* Right Column - Order Summary Block */}
+        <div className="lg:col-span-5 xl:col-span-4 sticky top-24">
+          <Card className="shadow-md border-muted">
+            <CardHeader className="bg-muted/10 border-b pb-4">
+              <CardTitle className="text-xl">3. Order Summary</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              
+              <div className="space-y-4 mt-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold text-muted-foreground text-lg">Total Amount</span>
+                  <span className="font-extrabold text-2xl text-primary">₹{totalCartAmount.toFixed(2)}</span>
+                </div>
+              </div>
+
+              <div className="mt-8 w-full">
+                <Button 
+                  onClick={handleCheckout} 
+                  className="w-full shadow-md transition-transform active:scale-[0.98] text-lg py-6"
+                >
+                  Proceed to Secure Payment
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

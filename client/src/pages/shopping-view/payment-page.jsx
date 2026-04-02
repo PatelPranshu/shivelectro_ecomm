@@ -61,7 +61,11 @@ function PaymentPage() {
               navigate("/shop/checkout");
             }
           },
-          prefill: { name: user?.name, email: user?.email },
+          prefill: { 
+            name: user?.name, 
+            email: user?.email,
+            contact: orderPayload?.addressInfo?.phone
+          },
           theme: { color: "#e30045" }
         };
 

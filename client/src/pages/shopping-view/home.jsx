@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-Mail,
+  Mail,
   MapPin,
   Phone,
   Smartphone,
@@ -17,7 +17,7 @@ import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
-import ProductDetailsDialog from "@/components/shopping-view/product-details";
+
 import { getFeatureImages } from "@/store/common-slice";
 
 function ShoppingHome() {
@@ -27,7 +27,7 @@ function ShoppingHome() {
   );
   const { featureImageList } = useSelector((state) => state.commonFeature);
 
-  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+
 
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 
@@ -39,7 +39,7 @@ function ShoppingHome() {
 
 
   function handleGetProductDetails(getCurrentProductId) {
-    dispatch(fetchProductDetails(getCurrentProductId));
+    navigate(`/shop/product/${getCurrentProductId}`);
   }
 
   function handleAddtoCart(getCurrentProductId) {
@@ -69,9 +69,7 @@ function ShoppingHome() {
     });
   }
 
-  useEffect(() => {
-    if (productDetails !== null) setOpenDetailsDialog(true);
-  }, [productDetails]);
+
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -90,7 +88,6 @@ function ShoppingHome() {
     );
   }, [dispatch]);
 
-  console.log(productList, "productList");
 
   useEffect(() => {
     dispatch(getFeatureImages());
@@ -445,11 +442,7 @@ function ShoppingHome() {
        
 
 
-      <ProductDetailsDialog
-        open={openDetailsDialog}
-        setOpen={setOpenDetailsDialog}
-        productDetails={productDetails}
-      />
+
     </div>
   );
 }
