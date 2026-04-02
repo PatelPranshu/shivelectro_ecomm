@@ -127,13 +127,8 @@ function ProductDetailsPage() {
 
   if (isLoading || !productDetails) {
     return (
-      <div className="container mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-        <Skeleton className="w-full aspect-square rounded-xl" />
-        <div className="space-y-6">
-          <Skeleton className="h-10 w-3/4" />
-          <Skeleton className="h-6 w-1/4" />
-          <Skeleton className="h-[200px] w-full" />
-        </div>
+      <div className="flex items-center justify-center min-h-[70vh] w-full">
+        <div className="loader"></div>
       </div>
     );
   }

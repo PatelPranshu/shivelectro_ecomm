@@ -231,16 +231,9 @@ function ShoppingListing() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 p-2 md:p-4">
           {isLoading ? (
-            // If loading, render 8 skeleton loaders
-            Array.from({ length: 8 }).map((_, index) => (
-              <div key={index} className="flex flex-col space-y-3">
-                <Skeleton className="h-[180px] w-full rounded-xl" />
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-4/5" />
-                  <Skeleton className="h-4 w-3/5" />
-                </div>
-              </div>
-            ))
+            <div className="col-span-full flex justify-center items-center h-[50vh]">
+              <div className="loader"></div>
+            </div>
           ) : (
             // If not loading, render the actual product tiles
             productList && productList.length > 0 ? (

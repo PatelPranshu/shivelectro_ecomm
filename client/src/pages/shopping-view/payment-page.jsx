@@ -75,11 +75,11 @@ function PaymentPage() {
   }, [dispatch, navigate, toast, orderPayload, totalCartAmount, user]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <Skeleton className="w-96 h-48" />
-      <h2 className="text-2xl font-bold mt-4">Secure Payment Page</h2>
+    <div className="flex flex-col items-center justify-center min-h-[70vh]">
+      <div className="loader"></div>
+      <h2 className="text-2xl font-bold mt-8">Secure Payment</h2>
       <p className="text-muted-foreground mt-2">{status}</p>
-      <p className="mt-1">Please do not refresh or close this page.</p>
+      <p className="mt-1 text-sm">Please do not refresh or close this page.</p>
     </div>
   );
 }
