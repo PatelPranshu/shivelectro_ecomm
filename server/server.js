@@ -39,7 +39,7 @@ mongoose
 
 
 app.get("/", (req, res) => {
-  res.send("Welcome to the E-commerce");
+  res.send("Welcome to the Shivelectro");
 });
 
 
@@ -76,6 +76,11 @@ app.use("/api/shop/search", shopSearchRouter);
 app.use("/api/shop/review", shopReviewRouter);
 
 app.use("/api/common/feature", commonFeatureRouter);
+
+
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 
 app.listen(PORT, '0.0.0.0', () => console.log(`Server is now running on port ${PORT}`));
