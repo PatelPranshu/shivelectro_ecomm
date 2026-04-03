@@ -97,6 +97,12 @@ export const addProductFormElements = [
     type: "number",
     placeholder: "Enter total stock",
   },
+  {
+    label: "Feature Product",
+    name: "isFeature",
+    componentType: "checkbox",
+    description: "Highlight this product on the home page."
+  },
 ];
 
 export const shoppingViewHeaderMenuItems = [

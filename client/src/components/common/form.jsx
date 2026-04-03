@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "../ui/input";
+import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import {
   Select,
@@ -117,6 +118,21 @@ function CommonForm({
 
         break;
 
+      case "checkbox":
+        element = (
+          <Checkbox
+            id={getControlItem.name}
+            checked={!!value}
+            onCheckedChange={(checked) =>
+              setFormData({
+                ...formData,
+                [getControlItem.name]: checked,
+              })
+            }
+          />
+        );
+        break;
+
       default:
         element = renderInput();
         break;
@@ -128,12 +144,34 @@ function CommonForm({
   return (
     <form onSubmit={onSubmit}>
       <div className="flex flex-col gap-3">
-        {formControls.map((controlItem) => (
-          <div className="grid w-full gap-1.5" key={controlItem.name}>
-            <Label className="mb-1">{controlItem.label}</Label>
-            {renderInputsByComponentType(controlItem)}
-          </div>
-        ))}
+        {formControls.map((controlItem) => {
+          if (controlItem.componentType === "checkbox") {
+            return (
+              <div 
+                key={controlItem.name}
+                className="flex items-center justify-between rounded-lg border p-4 mt-2 hover:bg-muted/50 transition-colors"
+              >
+                <div className="space-y-0.5">
+                  <Label htmlFor={controlItem.name} className="text-base font-semibold cursor-pointer">
+                    {controlItem.label}
+                  </Label>
+                  {controlItem.description && (
+                    <p className="text-sm text-muted-foreground">
+                      {controlItem.description}
+                    </p>
+                  )}
+                </div>
+                {renderInputsByComponentType(controlItem)}
+              </div>
+            );
+          }
+          return (
+            <div className="grid w-full gap-1.5" key={controlItem.name}>
+              <Label className="mb-1">{controlItem.label}</Label>
+              {renderInputsByComponentType(controlItem)}
+            </div>
+          );
+        })}
       </div>
       <Button disabled={isBtnDisabled} type="submit" className="mt-2 w-full">
         {buttonText || "Submit"}
