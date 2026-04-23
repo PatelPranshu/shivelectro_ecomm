@@ -154,7 +154,7 @@ function ProductDetailsPage() {
           : "https://schema.org/OutOfStock",
         "seller": {
           "@type": "Organization",
-          "name": "Shiv Electro"
+          "name": "Shiv Electronic"
         }
       }
     };
@@ -174,7 +174,7 @@ function ProductDetailsPage() {
   // Truncate description for meta tag (max 160 chars)
   const metaDescription = productDetails?.description
     ? productDetails.description.replace(/[#*_`]/g, "").substring(0, 155) + "..."
-    : "Shop premium electrical safety products from Shiv Electro (Samrat®).";
+    : "Shop premium electrical safety products from Shiv Electronic (Samrat®).";
 
   if (isLoading || !productDetails) {
     return (

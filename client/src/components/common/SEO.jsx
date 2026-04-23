@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-const SITE_NAME = "Shiv Electro";
+const SITE_NAME = "Shiv Electronic";
 const DEFAULT_OG_IMAGE = "https://www.shivelectro.com/logo.png";
 const BASE_URL = "https://www.shivelectro.com";
 
@@ -8,7 +8,7 @@ const BASE_URL = "https://www.shivelectro.com";
  * Reusable SEO component for per-page meta tag management.
  *
  * @param {Object} props
- * @param {string} props.title - Page title (will be appended with " | Shiv Electro")
+ * @param {string} props.title - Page title (will be appended with " | Shiv Electronic")
  * @param {string} props.description - Meta description (max ~160 chars recommended)
  * @param {string} [props.canonicalUrl] - Canonical URL for the page
  * @param {string} [props.ogImage] - Open Graph image URL (defaults to logo)

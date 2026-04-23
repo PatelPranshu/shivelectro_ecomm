@@ -110,7 +110,7 @@ function ShoppingHome() {
     <div className="flex flex-col min-h-screen">
       <SEO
         title="ELCB, Auto Switch & Electrical Safety Products | Samrat®"
-        description="Shiv Electro (Samrat®) — India's trusted manufacturer of ELCB, Auto Switch, Overload Protectors, Timers & Solar Fence Guards. 9+ years of quality electrical safety products. Shop online."
+        description="Shiv Electronic (Samrat®) — India's trusted manufacturer of ELCB, Auto Switch, Overload Protectors, Timers & Solar Fence Guards. 9+ years of quality electrical safety products. Shop online."
         canonicalUrl="/shop/home"
       />
       <div className="relative w-full h-[250px] sm:h-[350px] md:h-[500px] lg:h-[600px] overflow-hidden">

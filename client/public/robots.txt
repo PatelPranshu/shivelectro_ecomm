@@ -1,4 +1,4 @@
-# robots.txt for Shiv Electro (www.shivelectro.com)
+# robots.txt for Shiv Electronic (www.shivelectro.com)
 # Allow search engines to crawl all public pages
 
 User-agent: *
