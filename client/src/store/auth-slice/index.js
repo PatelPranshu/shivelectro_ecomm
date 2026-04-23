@@ -44,11 +44,16 @@ export const logoutUser = createAsyncThunk(
   "/auth/logout",
 
   async () => {
+    const token = sessionStorage.getItem('token');
+
     const response = await api.post(
       "/auth/logout",
       {},
       {
         withCredentials: true,
+        headers: {
+          "Authorization": token ? `Bearer ${token}` : "",
+        }
       }
     );
 
@@ -60,6 +65,8 @@ export const checkAuth = createAsyncThunk(
   "/auth/checkauth",
 
   async () => {
+    const token = sessionStorage.getItem('token');
+
     const response = await api.get(
       "/auth/check-auth",
       {
@@ -67,6 +74,7 @@ export const checkAuth = createAsyncThunk(
         headers: {
           "Cache-Control":
             "no-store, no-cache, must-revalidate, proxy-revalidate",
+          "Authorization": token ? `Bearer ${token}` : "",
         },
       }
     );
