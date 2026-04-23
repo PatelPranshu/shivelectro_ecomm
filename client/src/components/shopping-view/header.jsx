@@ -22,7 +22,6 @@ import { logoutUser } from "@/store/auth-slice";
 import UserCartWrapper from "./cart-wrapper";
 import { useEffect, useState } from "react";
 import { fetchCartItems } from "@/store/shop/cart-slice";
-import { Label } from "../ui/label";
 
 function MenuItems({ closeMenu }) {
   const navigate = useNavigate();
@@ -56,13 +55,17 @@ function MenuItems({ closeMenu }) {
   return (
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
       {shoppingViewHeaderMenuItems.map((menuItem) => (
-        <Label
-          onClick={() => handleNavigate(menuItem)}
-          className="text-base font-medium cursor-pointer"
+        <Link
+          to={menuItem.path}
+          onClick={(e) => {
+            e.preventDefault();
+            handleNavigate(menuItem);
+          }}
+          className="text-base font-medium hover:text-primary transition-colors"
           key={menuItem.id}
         >
           {menuItem.label}
-        </Label>
+        </Link>
       ))}
     </nav>
   );

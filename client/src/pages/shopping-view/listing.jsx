@@ -1,4 +1,5 @@
 import ProductFilter from "@/components/shopping-view/filter";
+import SEO from "@/components/common/SEO";
 
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { Button } from "@/components/ui/button";
@@ -152,6 +153,11 @@ function ShoppingListing() {
 
   return (
     <div className="mx-auto w-full md:px-6 md:py-8 max-w-screen-2xl">
+      <SEO
+        title="Shop All Products — ELCB, Timers, Overloads & More"
+        description="Browse the full range of Samrat® electrical safety products — ELCB, ELCB+MCB, Overload Protectors, Timers, Mobile Operated Switches, Solar Fence Guards & more. Best prices with free shipping."
+        canonicalUrl="/shop/listing"
+      />
       {/* Mobile Sort and Filter Action Bar (Sticky at top) */}
       <div className="flex md:hidden sticky top-[64px] z-30 bg-background border-b shadow-sm">
         <DropdownMenu>

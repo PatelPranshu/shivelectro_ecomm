@@ -12,9 +12,10 @@ import { useToast } from "@/components/ui/use-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchProductDetails, setProductDetails } from "@/store/shop/products-slice";
 import StarRatingComponent from "@/components/common/star-rating";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
 import { Skeleton } from "@/components/ui/skeleton";
+import SEO from "@/components/common/SEO";
 
 function ProductDetailsPage() {
   const { id } = useParams();
@@ -125,6 +126,56 @@ function ProductDetailsPage() {
         reviews.length
       : 0;
 
+  // Build Product JSON-LD schema for Rich Snippets
+  const productJsonLd = useMemo(() => {
+    if (!productDetails) return null;
+
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": productDetails.title,
+      "image": productDetails.image,
+      "description": productDetails.description
+        ? productDetails.description.substring(0, 300)
+        : "",
+      "brand": {
+        "@type": "Brand",
+        "name": "Samrat"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": `https://www.shivelectro.com/shop/product/${id}`,
+        "priceCurrency": "INR",
+        "price": productDetails.salePrice > 0
+          ? productDetails.salePrice.toString()
+          : productDetails.price.toString(),
+        "availability": productDetails.totalStock > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Shiv Electro"
+        }
+      }
+    };
+
+    // Only add aggregateRating when reviews exist
+    if (reviews && reviews.length > 0) {
+      schema.aggregateRating = {
+        "@type": "AggregateRating",
+        "ratingValue": averageReview.toFixed(1),
+        "reviewCount": reviews.length.toString()
+      };
+    }
+
+    return schema;
+  }, [productDetails, reviews, averageReview, id]);
+
+  // Truncate description for meta tag (max 160 chars)
+  const metaDescription = productDetails?.description
+    ? productDetails.description.replace(/[#*_`]/g, "").substring(0, 155) + "..."
+    : "Shop premium electrical safety products from Shiv Electro (Samrat®).";
+
   if (isLoading || !productDetails) {
     return (
       <div className="flex items-center justify-center min-h-[70vh] w-full">
@@ -135,6 +186,14 @@ function ProductDetailsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <SEO
+        title={productDetails?.title}
+        description={metaDescription}
+        canonicalUrl={`/shop/product/${id}`}
+        ogImage={productDetails?.image}
+        ogType="product"
+        jsonLd={productJsonLd}
+      />
       <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6 flex items-center gap-2">
         <ArrowLeft className="w-4 h-4" /> Go Back
       </Button>

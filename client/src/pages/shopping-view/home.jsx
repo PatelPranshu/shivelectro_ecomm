@@ -14,10 +14,10 @@ import {
   fetchProductDetails,
 } from "@/store/shop/products-slice";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
-
+import SEO from "@/components/common/SEO";
 import { getFeatureImages } from "@/store/common-slice";
 
 function ShoppingHome() {
@@ -108,6 +108,11 @@ function ShoppingHome() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <SEO
+        title="ELCB, Auto Switch & Electrical Safety Products | Samrat®"
+        description="Shiv Electro (Samrat®) — India's trusted manufacturer of ELCB, Auto Switch, Overload Protectors, Timers & Solar Fence Guards. 9+ years of quality electrical safety products. Shop online."
+        canonicalUrl="/shop/home"
+      />
       <div className="relative w-full h-[250px] sm:h-[350px] md:h-[500px] lg:h-[600px] overflow-hidden">
   {featureImageList && featureImageList.length > 0
     ? featureImageList.map((slide, index) => (
@@ -390,19 +395,19 @@ function ShoppingHome() {
               <h4 className="text-lg font-semibold mb-4 uppercase">Product</h4>
               <ul className="space-y-2">
                 <li>
-                  <a href="/shop/listing" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/shop/listing" className="text-gray-300 hover:text-white transition-colors">
                     All Products
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/shop/listing" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/shop/listing" className="text-gray-300 hover:text-white transition-colors">
                     New
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/shop/listing" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/shop/listing" className="text-gray-300 hover:text-white transition-colors">
                     Popular
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a href="#aboutus" className="text-gray-300 hover:text-white transition-colors">

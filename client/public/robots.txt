@@ -1,0 +1,22 @@
+# robots.txt for Shiv Electro (www.shivelectro.com)
+# Allow search engines to crawl all public pages
+
+User-agent: *
+Allow: /
+
+# Block admin panel
+Disallow: /admin/
+
+# Block authentication pages
+Disallow: /auth/
+
+# Block checkout and payment flows
+Disallow: /shop/checkout
+Disallow: /shop/payment
+Disallow: /shop/payment-success
+
+# Block user account pages
+Disallow: /shop/account
+
+# Sitemap location
+Sitemap: https://www.shivelectro.com/sitemap.xml
