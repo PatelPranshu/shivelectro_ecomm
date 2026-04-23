@@ -173,8 +173,8 @@ function ShoppingHeader() {
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <Link to="/shop/home" className="flex items-center gap-2">
-          <img src="/logo.png" alt="Shivelectro" className="h-6 w-7" />
-          <span className="font-extrabold text-[#e30045] text-xl">Shivelectro</span>
+          <img src="/logo.png" alt="Shiv Electronics" className="h-6 w-7" />
+          <span className="font-extrabold text-[#e30045] text-xl">Shiv Electronics</span>
         </Link>
         <div className="hidden lg:block">
           <MenuItems />

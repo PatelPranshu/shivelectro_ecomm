@@ -38,7 +38,7 @@ function PaymentPage() {
           key: import.meta.env.VITE_RAZORPAY_KEY_ID,
           amount: razorpayOrder.amount,
           currency: razorpayOrder.currency,
-          name: "Shivelectro",
+          name: "Shiv Electronics",
           description: "Final step of your purchase",
           order_id: razorpayOrder.id,
           handler: function (response) {

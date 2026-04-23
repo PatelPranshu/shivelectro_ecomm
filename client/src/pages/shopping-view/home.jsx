@@ -282,10 +282,10 @@ function ShoppingHome() {
                 <div>
                   <strong>Phone:</strong>{" "}
                   <a
-                    href="tel:+9102772228063"
+                    href="tel:+919428002163"
                     className="text-gray-700 hover:text-primary transition"
                   >
-                    +91 02772 228063
+                    +91 94280 02163
                   </a>
                 </div>
               </div>
@@ -353,19 +353,19 @@ function ShoppingHome() {
               <h4 className="text-lg font-semibold mb-4 uppercase">Company</h4>
               <ul className="space-y-2">
                 <li>
-                  <a href="#aboutus" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/shop/listing" className="text-gray-300 hover:text-white transition-colors">
                     Our Services
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#aboutus" className="text-gray-300 hover:text-white transition-colors">
+                  <Link to="/shop/privacy-policy" className="text-gray-300 hover:text-white transition-colors">
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#contact" className="text-gray-300 hover:text-white transition-colors">
-                    Affiliate Program
-                  </a>
+                  <Link to="/shop/terms-conditions" className="text-gray-300 hover:text-white transition-colors">
+                    Terms & Conditions
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -442,7 +442,7 @@ function ShoppingHome() {
             </div>
           </div>
           <div className="text-center text-gray-400 mt-12 border-t border-gray-700 pt-6">
-            <p>©2025 Shivelectro | All Rights Reserved</p>
+            <p>©2025 Shiv Electronics | All Rights Reserved</p>
           </div>
         </div>
       </footer>

@@ -25,6 +25,8 @@ import { fetchTaxonomy } from "./store/common-slice/taxonomy-slice";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
 import ProductDetailsPage from "./pages/shopping-view/product-details";
+import PrivacyPolicyPage from "./pages/shopping-view/privacy-policy";
+import TermsConditionsPage from "./pages/shopping-view/terms-conditions";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -124,6 +126,8 @@ function App() {
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="search" element={<SearchProducts />} />
           <Route path="product/:id" element={<ProductDetailsPage />} />
+          <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="terms-conditions" element={<TermsConditionsPage />} />
         </Route>
         <Route path="/unauth-page" element={<UnauthPage />} />
         <Route path="*" element={<NotFound />} />
