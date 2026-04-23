@@ -45,22 +45,29 @@ app.get("/", (req, res) => {
 
 console.log(`Server started at ${timeInMss}`);
 
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  process.env.CLIENT_URL_VERCEL,
-].filter(Boolean);
+// Using comma-separated env values like your laboratory-management project, 
+// with a fallback to your existing variables
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',').map(url => url.trim())
+  : [
+      process.env.CLIENT_URL,
+      process.env.CLIENT_URL_VERCEL,
+    ].filter(Boolean);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, curl, health checks)
+      // Allow requests with no origin (mobile apps, curl, Postman)
       if (!origin) return callback(null, true);
+      
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-      return callback(new Error("Not allowed by CORS"));
+      
+      // Return false to gracefully block unauthorized origins without crashing the server (500 Error)
+      return callback(null, false); 
     },
-    methods: ["GET", "POST", "DELETE", "PUT"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Added OPTIONS
     allowedHeaders: [
       "Content-Type",
       "Authorization",
@@ -69,6 +76,7 @@ app.use(
       "Pragma",
     ],
     credentials: true,
+    optionsSuccessStatus: 200 // Ensure success status for legacy browsers
   })
 );
 
