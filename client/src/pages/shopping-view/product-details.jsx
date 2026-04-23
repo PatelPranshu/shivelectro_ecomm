@@ -26,6 +26,8 @@ function ProductDetailsPage() {
   const { productDetails, isLoading } = useSelector((state) => state.shopProducts);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
+  const { config: siteConfig } = useSelector((state) => state.siteConfig);
+  const { categoryOptionsMap, brandOptionsMap } = useSelector((state) => state.taxonomy);
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -148,7 +150,7 @@ function ProductDetailsPage() {
         "priceCurrency": "INR",
         "price": productDetails.salePrice > 0
           ? productDetails.salePrice.toString()
-          : productDetails.price.toString(),
+          : productDetails.price ? productDetails.price.toString() : "0",
         "availability": productDetails.totalStock > 0
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
@@ -214,6 +216,19 @@ function ProductDetailsPage() {
             {productDetails?.title}
           </h1>
 
+          <div className="text-muted-foreground text-sm font-medium mb-4 flex gap-2">
+            {productDetails?.category && (
+              <span className="bg-muted px-3 py-1 rounded-full border">
+                {categoryOptionsMap[productDetails?.category] || productDetails?.category}
+              </span>
+            )}
+            {productDetails?.brand && (
+              <span className="bg-muted px-3 py-1 rounded-full border">
+                {brandOptionsMap[productDetails?.brand] || productDetails?.brand}
+              </span>
+            )}
+          </div>
+
           <div className="flex items-center gap-3 mb-6">
             <div className="flex items-center gap-1">
               <StarRatingComponent rating={averageReview} />
@@ -223,34 +238,38 @@ function ProductDetailsPage() {
             </span>
           </div>
 
-          <div className="flex items-baseline gap-4 mb-6">
-            <p
-              className={`text-3xl font-bold text-muted-foreground ${
-                productDetails?.salePrice > 0 ? "line-through text-2xl" : "text-primary"
-              }`}
-            >
-              ₹{productDetails?.price}
-            </p>
-            {productDetails?.salePrice > 0 ? (
-              <p className="text-4xl font-bold text-primary">₹{productDetails?.salePrice}</p>
-            ) : null}
-          </div>
-
-          <div className="mb-8">
-            {productDetails?.totalStock === 0 ? (
-              <Button size="lg" className="w-full opacity-60 cursor-not-allowed text-lg">
-                Out of Stock
-              </Button>
-            ) : (
-              <Button
-                size="lg"
-                className="w-full text-lg shadow-md transition-transform active:scale-[0.98]"
-                onClick={() => handleAddToCart(productDetails?._id, productDetails?.totalStock)}
+          {siteConfig?.showPrice && (
+            <div className="flex items-baseline gap-4 mb-6">
+              <p
+                className={`text-3xl font-bold text-muted-foreground ${
+                  productDetails?.salePrice > 0 ? "line-through text-2xl" : "text-primary"
+                }`}
               >
-                Add to Cart
-              </Button>
-            )}
-          </div>
+                ₹{productDetails?.price}
+              </p>
+              {productDetails?.salePrice > 0 ? (
+                <p className="text-4xl font-bold text-primary">₹{productDetails?.salePrice}</p>
+              ) : null}
+            </div>
+          )}
+
+          {siteConfig?.showAddToCart && (
+            <div className="mb-8">
+              {productDetails?.totalStock === 0 ? (
+                <Button size="lg" className="w-full opacity-60 cursor-not-allowed text-lg">
+                  Out of Stock
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  className="w-full text-lg shadow-md transition-transform active:scale-[0.98]"
+                  onClick={() => handleAddToCart(productDetails?._id, productDetails?.totalStock)}
+                >
+                  Add to Cart
+                </Button>
+              )}
+            </div>
+          )}
 
           <div className="prose prose-p:mb-4 max-w-none text-muted-foreground text-base mb-8">
             <ReactMarkdown remarkPlugins={[remarkBreaks]}>
@@ -258,64 +277,68 @@ function ProductDetailsPage() {
             </ReactMarkdown>
           </div>
 
-          <Separator className="my-8" />
+          {siteConfig?.showReviews && (
+            <>
+              <Separator className="my-8" />
 
-          {/* Reviews Section */}
-          <div className="flex flex-col gap-6">
-            <h2 className="text-2xl font-bold tracking-tight">Customer Reviews</h2>
-            <div className="grid gap-6 max-h-[400px] overflow-y-auto pr-2 rounded-md">
-              {reviews && reviews.length > 0 ? (
-                reviews.map((reviewItem) => (
-                  <div className="flex gap-4 p-4 rounded-lg bg-muted/30" key={reviewItem._id}>
-                    <Avatar className="w-10 h-10 border shadow-sm">
-                      <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                        {reviewItem?.userName[0].toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1.5 flex-1">
-                      <div className="flex justify-between items-center">
-                        <h3 className="font-bold text-base">{reviewItem?.userName}</h3>
+              {/* Reviews Section */}
+              <div className="flex flex-col gap-6">
+                <h2 className="text-2xl font-bold tracking-tight">Customer Reviews</h2>
+                <div className="grid gap-6 max-h-[400px] overflow-y-auto pr-2 rounded-md">
+                  {reviews && reviews.length > 0 ? (
+                    reviews.map((reviewItem) => (
+                      <div className="flex gap-4 p-4 rounded-lg bg-muted/30" key={reviewItem._id}>
+                        <Avatar className="w-10 h-10 border shadow-sm">
+                          <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                            {reviewItem?.userName[0].toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="grid gap-1.5 flex-1">
+                          <div className="flex justify-between items-center">
+                            <h3 className="font-bold text-base">{reviewItem?.userName}</h3>
+                          </div>
+                          <div className="flex items-center gap-0.5">
+                            <StarRatingComponent rating={reviewItem?.reviewValue} />
+                          </div>
+                          <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
+                            {reviewItem.reviewMessage}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-0.5">
-                        <StarRatingComponent rating={reviewItem?.reviewValue} />
-                      </div>
-                      <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
-                        {reviewItem.reviewMessage}
-                      </p>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 bg-muted/20 rounded-lg">
+                      <p className="text-muted-foreground font-medium">No reviews yet. Be the first!</p>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 bg-muted/20 rounded-lg">
-                  <p className="text-muted-foreground font-medium">No reviews yet. Be the first!</p>
+                  )}
                 </div>
-              )}
-            </div>
 
-            <div className="mt-6 flex-col flex gap-4 bg-muted/10 p-5 rounded-xl border">
-              <Label className="text-lg font-semibold">Write a review</Label>
-              <div className="flex gap-1">
-                <StarRatingComponent
-                  rating={rating}
-                  handleRatingChange={handleRatingChange}
-                />
+                <div className="mt-6 flex-col flex gap-4 bg-muted/10 p-5 rounded-xl border">
+                  <Label className="text-lg font-semibold">Write a review</Label>
+                  <div className="flex gap-1">
+                    <StarRatingComponent
+                      rating={rating}
+                      handleRatingChange={handleRatingChange}
+                    />
+                  </div>
+                  <Input
+                    name="reviewMsg"
+                    value={reviewMsg}
+                    onChange={(event) => setReviewMsg(event.target.value)}
+                    placeholder="Share your thoughts about this product..."
+                    className="bg-background"
+                  />
+                  <Button
+                    onClick={handleAddReview}
+                    disabled={reviewMsg.trim() === ""}
+                    className="w-full sm:w-auto self-start mt-2"
+                  >
+                    Submit Review
+                  </Button>
+                </div>
               </div>
-              <Input
-                name="reviewMsg"
-                value={reviewMsg}
-                onChange={(event) => setReviewMsg(event.target.value)}
-                placeholder="Share your thoughts about this product..."
-                className="bg-background"
-              />
-              <Button
-                onClick={handleAddReview}
-                disabled={reviewMsg.trim() === ""}
-                className="w-full sm:w-auto self-start mt-2"
-              >
-                Submit Review
-              </Button>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -27,6 +27,7 @@ function MenuItems({ closeMenu }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { config: siteConfig } = useSelector((state) => state.siteConfig);
 
   function handleNavigate(getCurrentMenuItem) {
     sessionStorage.removeItem("filters");
@@ -52,9 +53,15 @@ function MenuItems({ closeMenu }) {
     if (closeMenu) closeMenu();
   }
 
+  // Filter out search if showSearch is disabled
+  const visibleMenuItems = shoppingViewHeaderMenuItems.filter((item) => {
+    if (item.id === "search" && !siteConfig?.showSearch) return false;
+    return true;
+  });
+
   return (
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
-      {shoppingViewHeaderMenuItems.map((menuItem) => (
+      {visibleMenuItems.map((menuItem) => (
         <Link
           to={menuItem.path}
           onClick={(e) => {
@@ -74,6 +81,7 @@ function MenuItems({ closeMenu }) {
 function HeaderRightContent({ closeMenu }) {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
+  const { config: siteConfig } = useSelector((state) => state.siteConfig);
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -85,15 +93,15 @@ function HeaderRightContent({ closeMenu }) {
   }
 
   useEffect(() => {
-    if (isAuthenticated && user?.id) {
+    if (isAuthenticated && user?.id && siteConfig?.showCart) {
       dispatch(fetchCartItems(user.id));
     }
-  }, [dispatch, isAuthenticated, user]);
+  }, [dispatch, isAuthenticated, user, siteConfig?.showCart]);
 
 
   return (
     <div className="flex items-center flex-row gap-4">
-     {isAuthenticated && (
+     {isAuthenticated && siteConfig?.showCart && (
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <Button
           onClick={() => setOpenCartSheet(true)}
@@ -143,12 +151,12 @@ function HeaderRightContent({ closeMenu }) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : (
+        ) : siteConfig?.showLogin ? (
           <Button onClick={() => {
             navigate("/auth/login");
             if (closeMenu) closeMenu();
           }}>Login</Button>
-        )}
+        ) : null}
       </div>
     </div>
   );
@@ -156,6 +164,7 @@ function HeaderRightContent({ closeMenu }) {
 
 function ShoppingHeader() {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { config: siteConfig } = useSelector((state) => state.siteConfig);
   const [openSideMenu, setOpenSideMenu] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -219,7 +228,7 @@ function ShoppingHeader() {
                       Secure Logout
                     </Button>
                   </>
-                ) : (
+                ) : siteConfig?.showLogin ? (
                   <Button 
                     className="w-full h-12 mt-4"
                     onClick={() => {
@@ -229,7 +238,7 @@ function ShoppingHeader() {
                   >
                     Login / Sign up
                   </Button>
-                )}
+                ) : null}
               </div>
               
             </SheetContent>

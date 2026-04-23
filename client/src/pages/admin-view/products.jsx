@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { useToast } from "@/components/ui/use-toast";
 import { addProductFormElements } from "@/config";
+import TaxonomyManager from "@/components/admin-view/taxonomy-manager";
 import {
   addNewProduct,
   deleteProduct,
@@ -41,10 +42,31 @@ function AdminProducts() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [imageLoadingState, setImageLoadingState] = useState(false);
   const [currentEditedId, setCurrentEditedId] = useState(null);
+  
+  const [openCategoryManager, setOpenCategoryManager] = useState(false);
+  const [openBrandManager, setOpenBrandManager] = useState(false);
 
   const { productList } = useSelector((state) => state.adminProducts);
+  const { categories, brands } = useSelector((state) => state.taxonomy);
   const dispatch = useDispatch();
   const { toast } = useToast();
+
+  // Dynamically inject category and brand options into the form configuration
+  const dynamicFormElements = addProductFormElements.map((el) => {
+    if (el.name === "category") {
+      return {
+        ...el,
+        options: categories.map((cat) => ({ id: cat.value, label: cat.name })),
+      };
+    }
+    if (el.name === "brand") {
+      return {
+        ...el,
+        options: brands.map((brand) => ({ id: brand.value, label: brand.name })),
+      };
+    }
+    return el;
+  });
 
   function onSubmit(event) {
     event.preventDefault();
@@ -53,7 +75,10 @@ function AdminProducts() {
       ? dispatch(
           editProduct({
             id: currentEditedId,
-            formData,
+            formData: {
+              ...formData,
+              image: uploadedImageUrl,
+            },
           })
         ).then((data) => {
 
@@ -104,7 +129,15 @@ function AdminProducts() {
 
   return (
     <Fragment>
-      <div className="mb-5 w-full flex justify-end">
+      <div className="mb-5 w-full flex justify-between items-center gap-4 flex-wrap">
+        <div className="flex items-center gap-3">
+          <Button variant="outline" onClick={() => setOpenCategoryManager(true)}>
+            Manage Categories
+          </Button>
+          <Button variant="outline" onClick={() => setOpenBrandManager(true)}>
+            Manage Brands
+          </Button>
+        </div>
         <Button onClick={() => setOpenCreateProductsDialog(true)}>
           Add New Product
         </Button>
@@ -119,6 +152,7 @@ function AdminProducts() {
                 setCurrentEditedId={setCurrentEditedId}
                 product={productItem}
                 handleDelete={handleDelete}
+                setUploadedImageUrl={setUploadedImageUrl}
               />
             ))
           : null}
@@ -157,12 +191,24 @@ function AdminProducts() {
               formData={formData}
               setFormData={setFormData}
               buttonText={currentEditedId !== null ? "Edit" : "Add"}
-              formControls={addProductFormElements}
+              formControls={dynamicFormElements}
               isBtnDisabled={!isFormValid()}
+              buttonHidden={imageLoadingState}
             />
           </div>
         </SheetContent>
       </Sheet>
+
+      <TaxonomyManager
+        isOpen={openCategoryManager}
+        setIsOpen={setOpenCategoryManager}
+        type="category"
+      />
+      <TaxonomyManager
+        isOpen={openBrandManager}
+        setIsOpen={setOpenBrandManager}
+        type="brand"
+      />
     </Fragment>
   );
 }

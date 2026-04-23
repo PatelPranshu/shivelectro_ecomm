@@ -5,9 +5,12 @@ const {
   getProductReviews,
 } = require("../../controllers/shop/product-review-controller");
 
+const featureGate = require("../../helpers/featureGate");
+
 const router = express.Router();
 
-router.post("/add", addProductReview);
+// Submitting reviews is gated - reading reviews stays open
+router.post("/add", featureGate("showReviews"), addProductReview);
 router.get("/:productId", getProductReviews);
 
 module.exports = router;

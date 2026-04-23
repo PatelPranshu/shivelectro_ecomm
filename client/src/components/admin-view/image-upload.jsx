@@ -11,6 +11,7 @@ function ProductImageUpload({
   imageFile,
   setImageFile,
   imageLoadingState,
+  uploadedImageUrl,
   setUploadedImageUrl,
   setImageLoadingState,
   isEditMode,
@@ -37,6 +38,9 @@ function ProductImageUpload({
 
   function handleRemoveImage() {
     setImageFile(null);
+    if (setUploadedImageUrl) {
+      setUploadedImageUrl("");
+    }
     if (inputRef.current) {
       inputRef.current.value = "";
     }
@@ -61,6 +65,9 @@ function ProductImageUpload({
     if (imageFile !== null) uploadImageToCloudinary();
   }, [imageFile]);
 
+  // Show either the newly selected file OR the already uploaded image URL
+  const hasImage = imageFile !== null || (uploadedImageUrl && uploadedImageUrl !== "");
+
   return (
     <div
       className={`w-full  mt-4 ${isCustomStyling ? "" : "max-w-md mx-auto"}`}
@@ -69,9 +76,7 @@ function ProductImageUpload({
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        className={`${
-          isEditMode ? "opacity-60" : ""
-        } border-2 border-dashed rounded-lg p-4`}
+        className="border-2 border-dashed rounded-lg p-4"
       >
         <Input
           id="image-upload"
@@ -79,14 +84,11 @@ function ProductImageUpload({
           className="hidden"
           ref={inputRef}
           onChange={handleImageFileChange}
-          disabled={isEditMode}
         />
-        {!imageFile ? (
+        {!hasImage ? (
           <Label
             htmlFor="image-upload"
-            className={`${
-              isEditMode ? "cursor-not-allowed" : ""
-            } flex flex-col items-center justify-center h-32 cursor-pointer`}
+            className="flex flex-col items-center justify-center h-32 cursor-pointer"
           >
             <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
             <span>Drag & drop or click to upload image</span>
@@ -94,20 +96,24 @@ function ProductImageUpload({
         ) : imageLoadingState ? (
           <Skeleton className="h-10 bg-gray-100" />
         ) : (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <FileIcon className="w-8 text-primary mr-2 h-8" />
+          <div className="flex flex-col items-center justify-center">
+            {uploadedImageUrl && !imageFile ? (
+               <img src={uploadedImageUrl} alt="Product preview" className="h-32 object-contain mb-2 rounded-md" />
+            ) : (
+               <FileIcon className="w-8 text-primary h-8 mb-2" />
+            )}
+            <div className="flex items-center justify-between w-full">
+              <p className="text-sm font-medium line-clamp-1">{imageFile ? imageFile.name : "Current Image"}</p>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground shrink-0"
+                onClick={handleRemoveImage}
+              >
+                <XIcon className="w-4 h-4" />
+                <span className="sr-only">Remove File</span>
+              </Button>
             </div>
-            <p className="text-sm font-medium">{imageFile.name}</p>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-foreground"
-              onClick={handleRemoveImage}
-            >
-              <XIcon className="w-4 h-4" />
-              <span className="sr-only">Remove File</span>
-            </Button>
           </div>
         )}
       </div>

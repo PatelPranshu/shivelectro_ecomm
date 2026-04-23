@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 function UserCartWrapper({ cartItems, setOpenCartSheet }) {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const { config: siteConfig } = useSelector((state) => state.siteConfig);
 
   const totalCartAmount =
     cartItems && cartItems.length > 0
@@ -51,14 +52,15 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
           <span className="font-bold">₹{totalCartAmount}</span>
         </div>
       </div>
-      <Button
-        // ✅ 4. USE the new handler function
-        onClick={handleCheckout}
-        className="w-full mt-6"
-        disabled={!cartItems || cartItems.length === 0}
-      >
-        Checkout
-      </Button>
+      {siteConfig?.showCheckout && (
+        <Button
+          onClick={handleCheckout}
+          className="w-full mt-6"
+          disabled={!cartItems || cartItems.length === 0}
+        >
+          Checkout
+        </Button>
+      )}
     </SheetContent>
   );
 }

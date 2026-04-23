@@ -3,10 +3,11 @@ import {
   ChartNoAxesCombined,
   LayoutDashboard,
   ShoppingBasket,
+  ToggleLeft,
 } from "lucide-react";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "../ui/sheet";
 
 const adminSidebarMenuItems = [
   {
@@ -26,6 +27,12 @@ const adminSidebarMenuItems = [
     label: "Orders",
     path: "/admin/orders",
     icon: <BadgeCheck />,
+  },
+  {
+    id: "modes",
+    label: "Modes",
+    path: "/admin/modes",
+    icon: <ToggleLeft />,
   },
 ];
 
@@ -62,8 +69,11 @@ function AdminSideBar({ open, setOpen }) {
             <SheetHeader className="border-b">
               <SheetTitle className="flex gap-2 mt-5 mb-5">
                 <img src="/logo.png" alt="Shivelectro" className="h-6 w-7" />
-          <h1 className="text-xl text-red-600 font-extrabold">ShivelectroAdmin</h1>
+                <span className="text-xl text-red-600 font-extrabold">ShivelectroAdmin</span>
               </SheetTitle>
+              <SheetDescription className="sr-only">
+                Admin sidebar menu
+              </SheetDescription>
             </SheetHeader>
             <MenuItems setOpen={setOpen} />
           </div>

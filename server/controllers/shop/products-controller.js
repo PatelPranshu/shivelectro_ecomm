@@ -1,4 +1,5 @@
 const Product = require("../../models/Product");
+const SiteConfig = require("../../models/SiteConfig");
 
 const getFilteredProducts = async (req, res) => {
   try {
@@ -42,12 +43,25 @@ const getFilteredProducts = async (req, res) => {
 
     const products = await Product.find(filters).sort(sort);
 
+    // Backend enforcement: strip prices if showPrice is disabled
+    const config = await SiteConfig.findOne();
+    let responseData = products;
+
+    if (config && config.showPrice === false) {
+      responseData = products.map((product) => {
+        const productObj = product.toObject();
+        delete productObj.price;
+        delete productObj.salePrice;
+        return productObj;
+      });
+    }
+
     res.status(200).json({
       success: true,
-      data: products,
+      data: responseData,
     });
   } catch (e) {
-    console.log(error);
+    console.log(e);
     res.status(500).json({
       success: false,
       message: "Some error occured",
@@ -66,12 +80,22 @@ const getProductDetails = async (req, res) => {
         message: "Product not found!",
       });
 
+    // Backend enforcement: strip prices if showPrice is disabled
+    const config = await SiteConfig.findOne();
+    let responseData = product;
+
+    if (config && config.showPrice === false) {
+      responseData = product.toObject();
+      delete responseData.price;
+      delete responseData.salePrice;
+    }
+
     res.status(200).json({
       success: true,
-      data: product,
+      data: responseData,
     });
   } catch (e) {
-    console.log(error);
+    console.log(e);
     res.status(500).json({
       success: false,
       message: "Some error occured",

@@ -20,6 +20,7 @@ function CommonForm({
   onSubmit,
   buttonText,
   isBtnDisabled,
+  buttonHidden = false,
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -173,9 +174,11 @@ function CommonForm({
           );
         })}
       </div>
-      <Button disabled={isBtnDisabled} type="submit" className="mt-2 w-full">
-        {buttonText || "Submit"}
-      </Button>
+      {!buttonHidden && (
+        <Button disabled={isBtnDisabled} type="submit" className="mt-2 w-full">
+          {buttonText || "Submit"}
+        </Button>
+      )}
     </form>
   );
 }

@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import AuthLayout from "./components/auth/layout";
 import AuthLogin from "./pages/auth/login";
 import AuthRegister from "./pages/auth/register";
@@ -7,6 +7,7 @@ import AdminDashboard from "./pages/admin-view/dashboard";
 import AdminProducts from "./pages/admin-view/products";
 import AdminOrders from "./pages/admin-view/orders";
 import AdminFeatures from "./pages/admin-view/features";
+import AdminModes from "./pages/admin-view/modes";
 import ShoppingLayout from "./components/shopping-view/layout";
 import NotFound from "./pages/not-found";
 import ShoppingHome from "./pages/shopping-view/home";
@@ -18,7 +19,9 @@ import CheckAuth from "./components/common/check-auth";
 import UnauthPage from "./pages/unauth-page";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { checkAuth } from "./store/auth-slice";
+import { checkAuth, logoutUser } from "./store/auth-slice";
+import { fetchSiteConfig } from "./store/common-slice/site-config-slice";
+import { fetchTaxonomy } from "./store/common-slice/taxonomy-slice";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
 import ProductDetailsPage from "./pages/shopping-view/product-details";
@@ -27,11 +30,41 @@ function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
   );
+  const { config: siteConfig } = useSelector((state) => state.siteConfig);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     dispatch(checkAuth());
+    dispatch(fetchSiteConfig());
+    dispatch(fetchTaxonomy());
   }, [dispatch]);
+
+  // Auto-logout non-admin users if login or registration is disabled
+  useEffect(() => {
+    if (isAuthenticated && user?.role !== "admin" && siteConfig) {
+      if (!siteConfig.showLogin || !siteConfig.showRegistration) {
+        dispatch(logoutUser());
+      }
+    }
+  }, [siteConfig, isAuthenticated, user, dispatch]);
+
+  // Route guards based on site config
+  useEffect(() => {
+    if (siteConfig) {
+      const path = location.pathname;
+      if (path.includes("/checkout") && !siteConfig.showCheckout) {
+        navigate("/shop/home");
+      }
+      if (path.includes("/search") && !siteConfig.showSearch) {
+        navigate("/shop/home");
+      }
+      if (path.includes("/register") && !siteConfig.showRegistration) {
+        navigate("/auth/login");
+      }
+    }
+  }, [siteConfig, location.pathname, navigate]);
 
   if (isLoading) return (
     <div className="flex items-center justify-center min-h-screen w-full bg-white">
@@ -75,6 +108,7 @@ function App() {
           <Route path="products" element={<AdminProducts />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="features" element={<AdminFeatures />} />
+          <Route path="modes" element={<AdminModes />} />
         </Route>
         <Route
           path="/shop"

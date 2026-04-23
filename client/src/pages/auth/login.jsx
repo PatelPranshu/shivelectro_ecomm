@@ -3,7 +3,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { loginFormControls } from "@/config";
 import { loginUser } from "@/store/auth-slice";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const initialState = {
@@ -15,6 +15,7 @@ function AuthLogin() {
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
   const { toast } = useToast();
+  const { config: siteConfig } = useSelector((state) => state.siteConfig);
 
   function onSubmit(event) {
     event.preventDefault();
@@ -43,15 +44,17 @@ function AuthLogin() {
         <h1 className="text-3xl font-bold tracking-tight text-foreground">
           Sign in to your account
         </h1>
-        <p className="mt-2">
-          Don&#39;t have an account
-          <Link
-            className="font-medium ml-2 text-primary hover:underline"
-            to="/auth/register"
-          >
-            Register
-          </Link>
-        </p>
+        {siteConfig?.showRegistration && (
+          <p className="mt-2">
+            Don&#39;t have an account
+            <Link
+              className="font-medium ml-2 text-primary hover:underline"
+              to="/auth/register"
+            >
+              Register
+            </Link>
+          </p>
+        )}
       </div>
       <CommonForm
         formControls={loginFormControls}

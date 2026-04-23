@@ -57,24 +57,13 @@ export const addProductFormElements = [
     label: "Category",
     name: "category",
     componentType: "select",
-    options: [
-      { id: "elcb", label: "ELCB" },
-      { id: "elcbmcb", label: "ELCB+MCB" },
-      { id: "ol", label: "Overload" },
-      { id: "timer", label: "Timer" },
-      { id: "mbs", label: "Mobile Operated Switch" },
-      { id: "SFG", label: "Solar Fence Guard" },
-      { id: "dol", label: "Direct On Line" },
-      { id: "light", label: "Street Light" },
-    ],
+    options: [],
   },
   {
     label: "Brand",
     name: "brand",
     componentType: "select",
-    options: [
-      { id: "samrat", label: "Samrat" },
-    ],
+    options: [],
   },
   {
     label: "Price",
@@ -133,37 +122,6 @@ export const shoppingViewHeaderMenuItems = [
   },
 ];
 
-export const categoryOptionsMap = {
-  elcb: "ELCB",
-  elcbmcb: "ELCB+MCB",
-  ol: "Overload",
-  timer: "Timer",
-  mbs: "Mobile Operated Switch",
-  SFG: "Solar Fence Guard",
-  dol: "Direct On Line",
-  light: "Street Light",
-};
-
-export const brandOptionsMap = {
-  samrat: "Samtrat",
-
-};
-
-export const filterOptions = {
-  category: [
-    { id: "elcb", label: "ELCB" },
-    { id: "elcbmcb", label: "ELCB+MCB" },
-    { id: "ol", label: "Overload" },
-    { id: "timer", label: "Timer" },
-    { id: "mbs", label: "Mobile Operated Switch" },
-    { id: "SFG", label: "Solar Fence Guard" },
-    { id: "dol", label: "Direct On Line" },
-    { id: "light", label: "Street Light" },
-  ],
-  brand: [
-    { id: "samrat", label: "Samrat" },
-  ],
-};
 
 export const sortOptions = [
   { id: "price-lowtohigh", label: "Price: Low to High" },

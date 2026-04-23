@@ -64,9 +64,11 @@ function AdminDashboard() {
         imageLoadingState={imageLoadingState}
         isCustomStyling={true}
       />
-      <Button onClick={handleUploadFeatureImage} className="mt-5 w-full">
-        Upload
-      </Button>
+      {!imageLoadingState && (
+        <Button onClick={handleUploadFeatureImage} className="mt-5 w-full">
+          Upload
+        </Button>
+      )}
       <div className="flex flex-col gap-4 mt-5">
         {featureImageList && featureImageList.length > 0
           ? featureImageList.map((featureImgItem) => (

@@ -15,6 +15,10 @@ const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
 
 const commonFeatureRouter = require("./routes/common/feature-routes");
+const adminModesRouter = require("./routes/admin/modes-routes");
+const siteConfigRouter = require("./routes/common/site-config-routes");
+const adminTaxonomyRouter = require("./routes/admin/taxonomy-routes");
+const commonTaxonomyRouter = require("./routes/common/taxonomy-routes");
 
 require('dotenv').config();
 
@@ -87,6 +91,8 @@ app.use('/api/auth', authLimiter);
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/admin/orders", adminOrderRouter);
+app.use("/api/admin/modes", adminModesRouter);
+app.use("/api/admin/taxonomy", adminTaxonomyRouter);
 
 app.use("/api/shop/products", shopProductsRouter);
 app.use("/api/shop/cart", shopCartRouter);
@@ -96,6 +102,8 @@ app.use("/api/shop/search", shopSearchRouter);
 app.use("/api/shop/review", shopReviewRouter);
 
 app.use("/api/common/feature", commonFeatureRouter);
+app.use("/api/common/site-config", siteConfigRouter);
+app.use("/api/common/taxonomy", commonTaxonomyRouter);
 
 
 app.get('/api/health', (req, res) => {
