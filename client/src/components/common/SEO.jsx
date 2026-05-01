@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-const SITE_NAME = "Shiv Electronic";
+const SITE_NAME = "Shiv Electro";
 const DEFAULT_OG_IMAGE = "https://www.shivelectro.com/logo.png";
 const BASE_URL = "https://www.shivelectro.com";
 
