@@ -1,5 +1,6 @@
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-url";
 
 function AdminProductTile({
   product,
@@ -14,8 +15,11 @@ function AdminProductTile({
       <div>
         <div className="relative">
           <img
-            src={product?.image}
-            alt={product?.title}
+            src={getOptimizedImageUrl(product?.image, 400)}
+            alt={product?.title || "Product image"}
+            width={400}
+            height={300}
+            loading="lazy"
             className="w-full h-[300px] object-contain bg-[#EDF3FA] rounded-t-lg"
           />
         </div>

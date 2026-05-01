@@ -68,7 +68,7 @@ function AdminSideBar({ open, setOpen }) {
           <div className="flex flex-col h-full">
             <SheetHeader className="border-b">
               <SheetTitle className="flex gap-2 mt-5 mb-5">
-                <img src="/logo.png" alt="Shiv Electronics" className="h-6 w-7" />
+                <img src="/logo.png" alt="Shiv Electronics Admin" className="h-6 w-7" width={28} height={24} />
                 <span className="text-xl text-red-600 font-extrabold">Shiv Electronics Admin</span>
               </SheetTitle>
               <SheetDescription className="sr-only">
@@ -84,7 +84,7 @@ function AdminSideBar({ open, setOpen }) {
           onClick={() => navigate("/admin/dashboard")}
           className="flex cursor-pointer items-center gap-2"
         >
-          <img src="/logo.png" alt="Shiv Electronics" className="h-6 w-7" />
+          <img src="/logo.png" alt="Shiv Electronics Admin" className="h-6 w-7" width={28} height={24} />
           <h1 className="text-xl text-red-600 font-extrabold">Shiv Electronics</h1>
           <span className="text-black font-extrabold">Admin</span>
         </div>

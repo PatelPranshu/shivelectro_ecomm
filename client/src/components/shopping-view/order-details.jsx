@@ -7,6 +7,7 @@ import {
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { MapPin, Phone, CreditCard, Calendar, ShoppingBag } from "lucide-react";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-url";
 
 function ShoppingOrderDetailsView({ orderDetails }) {
   const { user } = useSelector((state) => state.auth);
@@ -65,7 +66,7 @@ function ShoppingOrderDetailsView({ orderDetails }) {
               <div key={item.productId} className="flex gap-4 p-3 rounded-lg border bg-card transition-all hover:shadow-md">
                 {item.image ? (
                   <div className="w-20 h-20 shrink-0 rounded-md border bg-white overflow-hidden flex items-center justify-center p-1">
-                    <img src={item.image} alt={item.title} className="max-w-full max-h-full object-contain" />
+                    <img src={getOptimizedImageUrl(item.image, 80)} alt={item.title || "Order item"} width={80} height={80} loading="lazy" className="max-w-full max-h-full object-contain" />
                   </div>
                 ) : (
                   <div className="w-20 h-20 shrink-0 rounded-md border bg-muted flex items-center justify-center">

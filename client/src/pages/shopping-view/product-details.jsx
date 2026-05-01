@@ -16,6 +16,7 @@ import { useEffect, useMemo, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
 import { Skeleton } from "@/components/ui/skeleton";
 import SEO from "@/components/common/SEO";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-url";
 
 function ProductDetailsPage() {
   const { id } = useParams();
@@ -156,7 +157,7 @@ function ProductDetailsPage() {
           : "https://schema.org/OutOfStock",
         "seller": {
           "@type": "Organization",
-          "name": "Shiv Electronic"
+          "name": "Shiv Electronics"
         }
       }
     };
@@ -176,7 +177,7 @@ function ProductDetailsPage() {
   // Truncate description for meta tag (max 160 chars)
   const metaDescription = productDetails?.description
     ? productDetails.description.replace(/[#*_`]/g, "").substring(0, 155) + "..."
-    : "Shop premium electrical safety products from Shiv Electronic (Samrat®).";
+    : "Shop premium electrical safety products from Shiv Electronics (Samrat®).";
 
   if (isLoading || !productDetails) {
     return (
@@ -204,8 +205,10 @@ function ProductDetailsPage() {
         {/* Product Image Section */}
         <div className="sticky top-8 relative overflow-hidden rounded-xl bg-[#EDF3FA] flex items-center justify-center p-6 shadow-sm border">
           <img
-            src={productDetails?.image}
-            alt={productDetails?.title}
+            src={getOptimizedImageUrl(productDetails?.image, 600)}
+            alt={productDetails?.title || "Product image"}
+            width={600}
+            height={600}
             className="w-full max-w-[500px] object-contain aspect-square mix-blend-multiply"
           />
         </div>

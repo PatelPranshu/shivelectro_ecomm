@@ -87,6 +87,8 @@ function AdminProducts() {
             setFormData(initialFormData);
             setOpenCreateProductsDialog(false);
             setCurrentEditedId(null);
+            setUploadedImageUrl("");
+            setImageFile(null);
           }
         })
       : dispatch(
@@ -99,6 +101,7 @@ function AdminProducts() {
             dispatch(fetchAllProducts());
             setOpenCreateProductsDialog(false);
             setImageFile(null);
+            setUploadedImageUrl("");
             setFormData(initialFormData);
             toast({
               title: "Product add successfully",
@@ -143,7 +146,13 @@ function AdminProducts() {
             Manage Brands
           </Button>
         </div>
-        <Button onClick={() => setOpenCreateProductsDialog(true)}>
+        <Button onClick={() => {
+          setCurrentEditedId(null);
+          setFormData(initialFormData);
+          setUploadedImageUrl("");
+          setImageFile(null);
+          setOpenCreateProductsDialog(true);
+        }}>
           Add New Product
         </Button>
       </div>
@@ -168,6 +177,8 @@ function AdminProducts() {
           setOpenCreateProductsDialog(false);
           setCurrentEditedId(null);
           setFormData(initialFormData);
+          setUploadedImageUrl("");
+          setImageFile(null);
         }}
       >
         <SheetContent side="right" className="overflow-auto">

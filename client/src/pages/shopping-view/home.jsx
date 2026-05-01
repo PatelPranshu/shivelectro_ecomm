@@ -19,6 +19,7 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
 import SEO from "@/components/common/SEO";
 import { getFeatureImages } from "@/store/common-slice";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-url";
 
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -110,15 +111,20 @@ function ShoppingHome() {
     <div className="flex flex-col min-h-screen">
       <SEO
         title="ELCB, Auto Switch & Electrical Safety Products | Samrat®"
-        description="Shiv Electronic (Samrat®) — India's trusted manufacturer of ELCB, Auto Switch, Overload Protectors, Timers & Solar Fence Guards. 9+ years of quality electrical safety products. Shop online."
+        description="Shiv Electronics (Samrat®) — India's trusted manufacturer of ELCB, Auto Switch, Overload Protectors, Timers & Solar Fence Guards. 9+ years of quality electrical safety products. Shop online."
         canonicalUrl="/shop/home"
       />
       <div className="relative w-full h-[250px] sm:h-[350px] md:h-[500px] lg:h-[600px] overflow-hidden">
   {featureImageList && featureImageList.length > 0
     ? featureImageList.map((slide, index) => (
         <img
-          src={slide?.image}
+          src={getOptimizedImageUrl(slide?.image, 1200)}
+          alt={`Shiv Electronics promotional banner ${index + 1}`}
           key={index}
+          width={1200}
+          height={600}
+          loading={index === 0 ? "eager" : "lazy"}
+          fetchPriority={index === 0 ? "high" : undefined}
           className={`${
             index === currentSlide ? "opacity-100" : "opacity-0"
           } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
@@ -328,6 +334,7 @@ function ShoppingHome() {
             <div className="w-full h-full min-h-[400px]">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d4365.530733452898!2d72.95946043042852!3d23.588664367422975!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395db89314a11cb5%3A0xaff10434d19474df!2sShiv%20Electronics(SAMRAT)!5e1!3m2!1sen!2sin!4v1749811422171!5m2!1sen!2sin"
+                title="Shiv Electronics Store Location on Google Maps"
                 width="100%"
                 height="100%"
                 className="border-0 rounded-lg"

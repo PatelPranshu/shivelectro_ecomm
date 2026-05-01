@@ -2,6 +2,7 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { useSelector } from "react-redux";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-url";
 
 function ShoppingProductTile({
   product,
@@ -16,8 +17,11 @@ function ShoppingProductTile({
       <div onClick={() => handleGetProductDetails(product?._id)}>
         <div className="relative overflow-hidden bg-slate-50 h-[220px] md:h-[280px] w-full flex items-center justify-center p-6 md:p-4 border-b">
           <img
-            src={product?.image}
-            alt={product?.title}
+            src={getOptimizedImageUrl(product?.image, 400)}
+            alt={product?.title || "Product image"}
+            width={400}
+            height={400}
+            loading="lazy"
             className="w-full h-full object-contain mix-blend-multiply"
           />
           {product?.totalStock === 0 ? (
