@@ -232,7 +232,7 @@ function ProductDetailsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-start mb-16">
         {/* Left: Product Image Section */}
         <div className="sticky top-24 flex flex-col gap-4">
-          <div className="relative overflow-hidden rounded-xl bg-gray-50 flex items-center justify-center p-8 aspect-square border">
+          <div className="relative overflow-hidden rounded-xl bg-[#f4f7fa] flex items-center justify-center p-0 sm:p-2 aspect-square border">
             <img
               src={getOptimizedImageUrl(productDetails?.image, 800)}
               alt={productDetails?.title || "Product image"}
@@ -435,6 +435,12 @@ function ProductDetailsPage() {
               Product Specification
             </TabsTrigger>
             <TabsTrigger 
+              value="otherDetails" 
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent px-0 py-3 font-semibold text-base"
+            >
+              Other Details
+            </TabsTrigger>
+            <TabsTrigger 
               value="reviews" 
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent px-0 py-3 font-semibold text-base"
             >
@@ -453,7 +459,20 @@ function ProductDetailsPage() {
             </TabsContent>
             
             <TabsContent value="specification" className="mt-0 outline-none">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+              {productDetails?.specifications ? (
+                <div
+                  className="prose prose-sm sm:prose-base max-w-none break-words whitespace-pre-wrap overflow-hidden text-muted-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-4 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-foreground [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-foreground [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-foreground [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_a]:text-primary [&_a]:underline"
+                  dangerouslySetInnerHTML={{
+                    __html: unescapeHTML(productDetails.specifications),
+                  }}
+                />
+              ) : (
+                <p className="text-muted-foreground italic">No specifications provided.</p>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="otherDetails" className="mt-0 outline-none">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mb-8">
                 <div>
                   <h3 className="font-bold text-lg mb-4">Key Features</h3>
                   <ul className="space-y-3 text-muted-foreground">
@@ -464,6 +483,15 @@ function ProductDetailsPage() {
                   </ul>
                 </div>
               </div>
+              
+              {productDetails?.otherDetails && (
+                <div
+                  className="prose prose-sm sm:prose-base max-w-none break-words whitespace-pre-wrap overflow-hidden text-muted-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-4 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-foreground [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-foreground [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-foreground [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_a]:text-primary [&_a]:underline"
+                  dangerouslySetInnerHTML={{
+                    __html: unescapeHTML(productDetails.otherDetails),
+                  }}
+                />
+              )}
             </TabsContent>
             
             <TabsContent value="reviews" className="mt-0 outline-none">

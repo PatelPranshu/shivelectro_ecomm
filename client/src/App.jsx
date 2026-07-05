@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { checkAuth, logoutUser } from "./store/auth-slice";
 import { fetchSiteConfig } from "./store/common-slice/site-config-slice";
 import { fetchTaxonomy } from "./store/common-slice/taxonomy-slice";
+import ScrollToTop from "./components/common/scroll-to-top";
 
 // ─── Lazy-loaded: Admin pages (never needed for shopping users) ──────────────
 const AdminLayout = lazy(() => import("./components/admin-view/layout"));
@@ -89,6 +90,7 @@ function App() {
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
+      <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route

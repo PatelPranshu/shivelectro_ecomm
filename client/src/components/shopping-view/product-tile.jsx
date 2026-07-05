@@ -15,7 +15,7 @@ function ShoppingProductTile({
   return (
     <Card className="w-full max-w-sm mx-auto cursor-pointer overflow-hidden rounded-lg border bg-white shadow-sm transition-colors hover:border-blue-200">
       <div onClick={() => handleGetProductDetails(product?._id)}>
-        <div className="relative overflow-hidden bg-slate-50 h-[220px] md:h-[280px] w-full flex items-center justify-center p-6 md:p-4 border-b">
+        <div className="relative overflow-hidden bg-[#f4f7fa] h-[220px] md:h-[280px] w-full flex items-center justify-center p-6 md:p-4 border-b">
           <img
             src={getOptimizedImageUrl(product?.image, 400)}
             alt={product?.title || "Product image"}

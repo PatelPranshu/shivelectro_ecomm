@@ -29,17 +29,14 @@ function AuthLogin() {
     }
 
     dispatch(loginUser(formData)).then((result) => {
-
-      if (loginUser.fulfilled.match(result)) {
+      if (result?.payload?.success) {
         toast({
           title: result.payload.message,
         });
       } else {
-
         toast({
           title: "Login Failed",
-
-          description: result.payload?.message || result.payload,
+          description: result?.payload?.message || "An error occurred",
           variant: "destructive",
         });
       }

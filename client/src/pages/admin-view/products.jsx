@@ -37,6 +37,8 @@ const initialFormData = {
   image: null,
   title: "",
   description: "",
+  specifications: "",
+  otherDetails: "",
   category: "",
   brand: "",
   price: "",
@@ -139,7 +141,10 @@ function AdminProducts() {
         (currentKey) =>
           currentKey !== "averageReview" &&
           currentKey !== "isFeature" &&
-          currentKey !== "salePrice"
+          currentKey !== "salePrice" &&
+          currentKey !== "description" &&
+          currentKey !== "specifications" &&
+          currentKey !== "otherDetails"
       )
       .map((key) => formData[key] !== "")
       .every((item) => item);
@@ -266,23 +271,52 @@ function AdminProducts() {
             </div>
           </div>
 
-          {/* Section 2: Product Description */}
+          {/* Section 2: Product Descriptions & Details */}
           <div className="rounded-xl border bg-card p-6 shadow-sm mb-6">
             <div className="flex items-center gap-2 mb-5">
               <AlignLeft className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-semibold">Product Description</h2>
+              <h2 className="text-lg font-semibold">Product Description & Details</h2>
             </div>
-            <div className="grid w-full gap-2">
-              <RichTextEditor
-                value={formData.description}
-                onChange={(value) =>
-                  setFormData({
-                    ...formData,
-                    description: value,
-                  })
-                }
-                placeholder="Enter product description"
-              />
+            <div className="grid grid-cols-1 gap-8">
+              <div className="grid w-full gap-2">
+                <Label>Product Description (Optional)</Label>
+                <RichTextEditor
+                  value={formData.description}
+                  onChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      description: value,
+                    })
+                  }
+                  placeholder="Enter product description"
+                />
+              </div>
+              <div className="grid w-full gap-2">
+                <Label>Product Specifications (Optional)</Label>
+                <RichTextEditor
+                  value={formData.specifications}
+                  onChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      specifications: value,
+                    })
+                  }
+                  placeholder="Enter product specifications"
+                />
+              </div>
+              <div className="grid w-full gap-2">
+                <Label>Other Details (Optional)</Label>
+                <RichTextEditor
+                  value={formData.otherDetails}
+                  onChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      otherDetails: value,
+                    })
+                  }
+                  placeholder="Enter other details"
+                />
+              </div>
             </div>
           </div>
 

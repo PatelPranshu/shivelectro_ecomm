@@ -27,6 +27,8 @@ const addProduct = async (req, res) => {
       image,
       title,
       description,
+      specifications,
+      otherDetails,
       category,
       brand,
       price,
@@ -47,6 +49,8 @@ const addProduct = async (req, res) => {
       image,
       title,
       description,
+      specifications,
+      otherDetails,
       category,
       brand,
       price: price === "" ? 0 : price,
@@ -101,6 +105,8 @@ const editProduct = async (req, res) => {
       image,
       title,
       description,
+      specifications,
+      otherDetails,
       category,
       brand,
       price,
@@ -123,7 +129,9 @@ const editProduct = async (req, res) => {
       });
 
     findProduct.title = title || findProduct.title;
-    findProduct.description = description || findProduct.description;
+    findProduct.description = description !== undefined ? description : findProduct.description;
+    findProduct.specifications = specifications !== undefined ? specifications : findProduct.specifications;
+    findProduct.otherDetails = otherDetails !== undefined ? otherDetails : findProduct.otherDetails;
     findProduct.category = category || findProduct.category;
     findProduct.brand = brand || findProduct.brand;
     findProduct.price = price === "" ? 0 : price || findProduct.price;

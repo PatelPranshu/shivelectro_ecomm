@@ -30,17 +30,15 @@ function AuthRegister() {
     }
 
     dispatch(registerUser(formData)).then((result) => {
-
-      if (registerUser.fulfilled.match(result)) {
+      if (result?.payload?.success) {
         toast({
           title: result.payload.message,
         });
         navigate("/auth/login");
       } else {
-
         toast({
           title: "Registration Failed",
-          description: result.payload?.message || result.payload,
+          description: result?.payload?.message || "An error occurred",
           variant: "destructive",
         });
       }
