@@ -10,6 +10,7 @@ const SiteConfigSchema = new mongoose.Schema(
     showLogin: { type: Boolean, default: true },
     showRegistration: { type: Boolean, default: true },
     showSearch: { type: Boolean, default: true },
+    showProductFeatures: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

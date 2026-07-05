@@ -1,5 +1,5 @@
 const express = require("express");
-const { authMiddleware } = require("../../controllers/auth/auth-controller");
+const { authMiddleware, isAdminMiddleware } = require("../../controllers/auth/auth-controller");
 const {
   getSiteConfig,
   updateSiteConfig,
@@ -7,9 +7,8 @@ const {
 
 const router = express.Router();
 
-// Both routes require authentication (admin check is handled by CheckAuth on frontend,
-// and additionally we verify role in the middleware)
-router.get("/get", authMiddleware, getSiteConfig);
-router.put("/update", authMiddleware, updateSiteConfig);
+// Both routes require authentication
+router.get("/get", getSiteConfig);
+router.put("/update", authMiddleware, isAdminMiddleware, updateSiteConfig);
 
 module.exports = router;

@@ -20,6 +20,14 @@ function AuthLogin() {
   function onSubmit(event) {
     event.preventDefault();
 
+    if (!formData.email || !formData.password) {
+      return toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+    }
+
     dispatch(loginUser(formData)).then((result) => {
 
       if (loginUser.fulfilled.match(result)) {
@@ -39,14 +47,14 @@ function AuthLogin() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-6">
-      <div className="text-center">
+    <div className="mx-auto w-full max-w-md space-y-8 rounded-xl border bg-card p-10 shadow-lg">
+      <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold tracking-tight text-foreground">
           Sign in to your account
         </h1>
         {siteConfig?.showRegistration && (
-          <p className="mt-2">
-            Don&#39;t have an account
+          <p className="text-sm text-muted-foreground mt-2">
+            Don&#39;t have an account?
             <Link
               className="font-medium ml-2 text-primary hover:underline"
               to="/auth/register"

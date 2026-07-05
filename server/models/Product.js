@@ -12,6 +12,11 @@ const ProductSchema = new mongoose.Schema(
     totalStock: Number,
     averageReview: Number,
     isFeature: Boolean,
+    freeDelivery: { type: Boolean, default: false },
+    warranty: String,
+    cashOnDelivery: { type: Boolean, default: false },
+    returnPolicy: String,
+    secureTransaction: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

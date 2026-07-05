@@ -143,14 +143,14 @@ function CommonForm({
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <div className="flex flex-col gap-3">
+    <form onSubmit={onSubmit} className="w-full">
+      <div className="flex flex-col gap-5">
         {formControls.map((controlItem) => {
           if (controlItem.componentType === "checkbox") {
             return (
               <div 
                 key={controlItem.name}
-                className="flex items-center justify-between rounded-lg border p-4 mt-2 hover:bg-muted/50 transition-colors"
+                className="flex items-center justify-between rounded-lg border p-4 hover:bg-muted/50 transition-colors"
               >
                 <div className="space-y-0.5">
                   <Label htmlFor={controlItem.name} className="text-base font-semibold cursor-pointer">
@@ -167,7 +167,7 @@ function CommonForm({
             );
           }
           return (
-            <div className="grid w-full gap-1.5" key={controlItem.name}>
+            <div className="grid w-full gap-2" key={controlItem.name}>
               <Label className="mb-1">{controlItem.label}</Label>
               {renderInputsByComponentType(controlItem)}
             </div>
@@ -175,7 +175,7 @@ function CommonForm({
         })}
       </div>
       {!buttonHidden && (
-        <Button disabled={isBtnDisabled} type="submit" className="mt-2 w-full">
+        <Button disabled={isBtnDisabled} type="submit" className="mt-6 w-full h-11 text-base">
           {buttonText || "Submit"}
         </Button>
       )}

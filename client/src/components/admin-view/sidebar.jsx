@@ -67,9 +67,8 @@ function AdminSideBar({ open, setOpen }) {
         <SheetContent side="left" className="w-64">
           <div className="flex flex-col h-full">
             <SheetHeader className="border-b">
-              <SheetTitle className="flex gap-2 mt-5 mb-5">
-                <img src="/logo.png" alt="Shiv Electronics Admin" className="h-6 w-7" width={28} height={24} />
-                <span className="text-xl text-red-600 font-extrabold">Shiv Electronics Admin</span>
+              <SheetTitle className="flex gap-2 mt-5 mb-5 justify-center">
+                <img src="/logo.png" alt="Shiv Electronics Admin" className="h-10 w-auto" />
               </SheetTitle>
               <SheetDescription className="sr-only">
                 Admin sidebar menu
@@ -82,11 +81,9 @@ function AdminSideBar({ open, setOpen }) {
       <aside className="hidden w-64 flex-col border-r bg-background p-6 lg:flex">
         <div
           onClick={() => navigate("/admin/dashboard")}
-          className="flex cursor-pointer items-center gap-2"
+          className="flex cursor-pointer items-center justify-center gap-2 mb-4"
         >
-          <img src="/logo.png" alt="Shiv Electronics Admin" className="h-6 w-7" width={28} height={24} />
-          <h1 className="text-xl text-red-600 font-extrabold">Shiv Electronics</h1>
-          <span className="text-black font-extrabold">Admin</span>
+          <img src="/logo.png" alt="Shiv Electronics Admin" className="h-10 w-auto" />
         </div>
         <MenuItems />
       </aside>

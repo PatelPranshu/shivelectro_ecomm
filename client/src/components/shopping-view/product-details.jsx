@@ -1,6 +1,4 @@
 import { StarIcon } from "lucide-react";
-import ReactMarkdown from 'react-markdown';
-import remarkBreaks from 'remark-breaks';
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
@@ -15,6 +13,18 @@ import { Label } from "../ui/label";
 import StarRatingComponent from "../common/star-rating";
 import { useEffect, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
+
+// Helper to unescape HTML entities if the server mistakenly escaped them
+const unescapeHTML = (str) => {
+  if (!str) return "";
+  return str
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&#x2F;/g, "/")
+    .replace(/&amp;/g, "&");
+};
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
@@ -137,14 +147,12 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           />
           <div>
             <h2 className="text-lg font-bold mt-4">Product Details</h2>
-          {/* <p className="text-muted-foreground text-l mb-5 mt-2 whitespace-pre-wrap">
-              {productDetails?.description}
-            </p> */}
-            <div className="prose prose-p:mb-4 max-w-none text-muted-foreground text-l mb-5 mt-2">
-                <ReactMarkdown remarkPlugins={[remarkBreaks]}>
-                  {productDetails?.description}
-                </ReactMarkdown>
-            </div>
+            <div
+              className="prose prose-sm max-w-none text-muted-foreground mb-5 mt-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-2 [&_h1]:text-xl [&_h1]:font-bold [&_h2]:text-lg [&_h2]:font-bold [&_h3]:text-base [&_h3]:font-bold [&_blockquote]:border-l-4 [&_blockquote]:pl-4 [&_blockquote]:italic [&_a]:text-primary [&_a]:underline"
+              dangerouslySetInnerHTML={{
+                __html: unescapeHTML(productDetails?.description),
+              }}
+            />
           </div>
         </div>
         <div className="">

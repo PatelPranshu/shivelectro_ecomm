@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Joi = require('joi');
 const User = require("../../models/User");
+const SiteConfig = require("../../models/SiteConfig");
 
 const registerSchema = Joi.object({
     userName: Joi.string().min(3).max(30).required(),
@@ -68,6 +69,15 @@ const loginUser = async (req, res) => {
         message: "Invalid email or password! Please try again",
       });
 
+    // Check if login is disabled for regular users
+    const siteConfig = await SiteConfig.findOne();
+    if (siteConfig && siteConfig.showLogin === false && checkUser.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "User login is currently disabled by admin.",
+      });
+    }
+
     const checkPasswordMatch = await bcrypt.compare(
       password,
       checkUser.password
@@ -86,13 +96,15 @@ const loginUser = async (req, res) => {
         userName: checkUser.userName,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "60m" }
+      { expiresIn: "60m", algorithm: "HS256" }
     );
+
+    const isProduction = process.env.NODE_ENV === "production" && process.env.CLIENT_URL && process.env.CLIENT_URL.startsWith('https:');
 
     res.cookie("token", token, { 
       httpOnly: true, 
-      secure: true, // Required for sameSite: 'none'
-      sameSite: 'none', // Allows cookie to be sent across different domains
+      secure: isProduction, 
+      sameSite: isProduction ? 'none' : 'lax', 
       maxAge: 3600000 // 1 hour
     }).json({
       success: true,
@@ -117,11 +129,12 @@ const loginUser = async (req, res) => {
 //logout
 
 const logoutUser = (req, res) => {
-  // Use same attributes as login to ensure the browser identifies the correct cookie to clear
+  const isProduction = process.env.NODE_ENV === "production" && process.env.CLIENT_URL && process.env.CLIENT_URL.startsWith('https:');
+
   res.clearCookie("token", { 
     httpOnly: true, 
-    secure: true, 
-    sameSite: 'none' 
+    secure: isProduction, 
+    sameSite: isProduction ? 'none' : 'lax'
   }).json({
     success: true,
     message: "Logged out successfully!",
@@ -139,7 +152,24 @@ const authMiddleware = async (req, res, next) => {
     });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] });
+    
+    // Enforce global logout for normal users if login mode is turned off
+    if (decoded.role !== 'admin') {
+      const siteConfig = await SiteConfig.findOne();
+      if (siteConfig && siteConfig.showLogin === false) {
+        const isProduction = process.env.NODE_ENV === "production" && process.env.CLIENT_URL && process.env.CLIENT_URL.startsWith('https:');
+        return res.status(401).clearCookie("token", { 
+          httpOnly: true, 
+          secure: isProduction, 
+          sameSite: isProduction ? 'none' : 'lax'
+        }).json({
+          success: false,
+          message: "User login is disabled by admin. You have been logged out.",
+        });
+      }
+    }
+
     req.user = decoded;
     next();
   } catch (error) {
@@ -150,4 +180,15 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser, logoutUser, authMiddleware };
+const isAdminMiddleware = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    next();
+  } else {
+    return res.status(403).json({
+      success: false,
+      message: "Access denied. Admin privileges required.",
+    });
+  }
+};
+
+module.exports = { registerUser, loginUser, logoutUser, authMiddleware, isAdminMiddleware };

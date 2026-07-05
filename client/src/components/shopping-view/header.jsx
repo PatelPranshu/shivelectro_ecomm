@@ -151,18 +151,18 @@ function HeaderRightContent({ closeMenu }) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : siteConfig?.showLogin ? (
+        ) : (
           <Button onClick={() => {
             navigate("/auth/login");
             if (closeMenu) closeMenu();
           }}>Login</Button>
-        ) : null}
+        )}
       </div>
     </div>
   );
 }
 
-function ShoppingHeader() {
+function ShoppingHeader({ hideRightContent = false }) {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const { config: siteConfig } = useSelector((state) => state.siteConfig);
   const [openSideMenu, setOpenSideMenu] = useState(false);
@@ -172,16 +172,18 @@ function ShoppingHeader() {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
-        <Link to="/shop/home" className="flex items-center gap-2">
-          <img src="/logo.png" alt="Shiv Electronics" className="h-6 w-7" width={28} height={24} />
-          <span className="font-extrabold text-[#e30045] text-xl">Shiv Electronics</span>
-        </Link>
-        <div className="hidden lg:block">
+        <div className="flex lg:flex-1 items-center">
+          <Link to="/shop/home" className="flex items-center">
+            <img src="/logo.png" alt="Shiv Electronics" className="h-10 w-auto" />
+          </Link>
+        </div>
+        
+        <div className="hidden lg:flex lg:flex-1 justify-center">
           <MenuItems />
         </div>
 
-        <div className="flex items-center gap-4">
-          <HeaderRightContent />
+        <div className="flex lg:flex-1 items-center justify-end gap-4">
+          {!hideRightContent && <HeaderRightContent />}
           <Sheet open={openSideMenu} onOpenChange={setOpenSideMenu}>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="lg:hidden">
@@ -196,51 +198,52 @@ function ShoppingHeader() {
                 <MenuItems closeMenu={() => setOpenSideMenu(false)} />
               </div>
               
-              <div className="mt-auto border-t pt-4 flex flex-col gap-3 pb-8">
-                {isAuthenticated ? (
-                  <>
-                    <h3 className="text-xs font-bold uppercase text-muted-foreground px-2">Account Profile</h3>
+              {!hideRightContent && (
+                <div className="mt-auto border-t pt-4 flex flex-col gap-3 pb-8">
+                  {isAuthenticated ? (
+                    <>
+                      <h3 className="text-xs font-bold uppercase text-muted-foreground px-2">Account Profile</h3>
+                      <Button 
+                        variant="ghost" 
+                        className="justify-start gap-4 h-12"
+                        onClick={() => {
+                          setOpenSideMenu(false);
+                          navigate("/shop/account");
+                        }}
+                      >
+                        <Avatar className="h-7 w-7 bg-black">
+                          <AvatarFallback className="bg-black text-white font-extrabold text-xs">
+                            {user?.userName?.[0]?.toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span>My Account</span>
+                      </Button>
+                      <Button 
+                        variant="destructive" 
+                        className="justify-start gap-4 mt-2 h-12"
+                        onClick={() => {
+                          dispatch(logoutUser());
+                          setOpenSideMenu(false);
+                          navigate("/shop/home");
+                        }}
+                      >
+                        <LogOut className="h-5 w-5" />
+                        Secure Logout
+                      </Button>
+                    </>
+                  ) : (
                     <Button 
-                      variant="ghost" 
-                      className="justify-start gap-4 h-12"
+                      className="w-full h-12 mt-4"
                       onClick={() => {
                         setOpenSideMenu(false);
-                        navigate("/shop/account");
+                        navigate("/auth/login");
                       }}
                     >
-                      <Avatar className="h-7 w-7 bg-black">
-                        <AvatarFallback className="bg-black text-white font-extrabold text-xs">
-                          {user?.userName?.[0]?.toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span>My Account</span>
+                      Login / Sign up
                     </Button>
-                    <Button 
-                      variant="destructive" 
-                      className="justify-start gap-4 mt-2 h-12"
-                      onClick={() => {
-                        dispatch(logoutUser());
-                        setOpenSideMenu(false);
-                        navigate("/shop/home");
-                      }}
-                    >
-                      <LogOut className="h-5 w-5" />
-                      Secure Logout
-                    </Button>
-                  </>
-                ) : siteConfig?.showLogin ? (
-                  <Button 
-                    className="w-full h-12 mt-4"
-                    onClick={() => {
-                      setOpenSideMenu(false);
-                      navigate("/auth/login");
-                    }}
-                  >
-                    Login / Sign up
-                  </Button>
-                ) : null}
-              </div>
-              
+                  )}
+                </div>
+              )}
             </SheetContent>
           </Sheet>
         </div>

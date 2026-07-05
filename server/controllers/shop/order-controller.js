@@ -30,6 +30,10 @@ const verifyRazorpayPayment = async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderPayload } = req.body;
     
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ success: false, message: "Missing Razorpay payment details." });
+    }
+    
     const secret = process.env.RAZORPAY_KEY_SECRET;
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -38,13 +42,32 @@ const verifyRazorpayPayment = async (req, res) => {
       .update(body.toString())
       .digest('hex');
 
-    if (expectedSignature !== razorpay_signature) {
+    const expectedBuffer = Buffer.from(expectedSignature, 'utf-8');
+    const signatureBuffer = Buffer.from(razorpay_signature, 'utf-8');
+
+    if (expectedBuffer.length !== signatureBuffer.length || !crypto.timingSafeEqual(expectedBuffer, signatureBuffer)) {
       return res.status(400).json({ success: false, message: "Payment verification failed. Signature mismatch." });
     }
 
     // --- LOGIC MOVED HERE ---
     // If signature is valid, now we create and save the order, update stock, and clear the cart.
     const { userId, cartItems, addressInfo, totalAmount, cartId } = orderPayload;
+
+    // SECURITY FIX: Verify total amount from DB to prevent client-side tampering
+    let expectedTotalAmount = 0;
+    for (let item of cartItems) {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        return res.status(404).json({ success: false, message: `Product not found: ${item.title}` });
+      }
+      const price = product.salePrice > 0 ? product.salePrice : product.price;
+      expectedTotalAmount += price * item.quantity;
+    }
+
+    // Allow small float precision difference, but reject intentional tampering
+    if (Math.abs(expectedTotalAmount - totalAmount) > 1) {
+      return res.status(400).json({ success: false, message: "Payment verification failed. Amount mismatch." });
+    }
 
     const newOrder = new Order({
       userId,

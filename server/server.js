@@ -14,6 +14,8 @@ const shopOrderRouter = require("./routes/shop/order-routes");
 const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
 
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 const commonFeatureRouter = require("./routes/common/feature-routes");
 const adminModesRouter = require("./routes/admin/modes-routes");
 const siteConfigRouter = require("./routes/common/site-config-routes");
@@ -35,6 +37,11 @@ const authLimiter = rateLimit({
   message: 'Too many requests from this IP, please try again after 15 minutes',
 });
 
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per window
+  message: 'Too many requests from this IP, please try again later',
+});
 
 mongoose
   .connect(dbHost)
@@ -87,6 +94,21 @@ app.use(
 
 app.use(cookieParser());
 app.use(express.json());
+
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data sanitization against XSS (skip for admin product routes to allow rich text HTML)
+app.use((req, res, next) => {
+  if (req.originalUrl.startsWith('/api/admin/products')) {
+    return next();
+  }
+  return xss()(req, res, next);
+});
+
+// Apply global rate limiting to all /api routes
+app.use('/api', globalLimiter);
+
 app.use('/api/auth', authLimiter);
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);

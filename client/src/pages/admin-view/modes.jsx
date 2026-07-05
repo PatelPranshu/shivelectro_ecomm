@@ -20,6 +20,7 @@ import {
   LogIn,
   UserPlus,
   Search,
+  Settings,
   Tag,
   ShoppingBag,
 } from "lucide-react";
@@ -68,9 +69,9 @@ const FEATURE_TOGGLES = [
   },
   {
     key: "showLogin",
-    label: "Login Button",
+    label: "Customer Login",
     description:
-      "Show the Login button in the header for non-authenticated users. Admin login is not affected.",
+      "When disabled, regular customers are blocked from logging into the site. The login button remains visible so Admins can still log in.",
     icon: LogIn,
     category: "Authentication",
   },
@@ -89,6 +90,14 @@ const FEATURE_TOGGLES = [
       "Show the Search link in the navigation menu.",
     icon: Search,
     category: "Navigation",
+  },
+  {
+    key: "showProductFeatures",
+    label: "Product Feature Badges",
+    description:
+      "Show/hide feature badges (e.g. Free Delivery, Warranty, Return Policy, Secure Transaction) on the product details page.",
+    icon: Tag,
+    category: "Shopping",
   },
 ];
 
@@ -211,7 +220,7 @@ function AdminModes() {
         ))}
       </div>
 
-      <div className="mt-8 p-4 bg-muted/30 rounded-lg border">
+      {/* <div className="mt-8 p-4 bg-muted/30 rounded-lg border">
         <p className="text-sm text-muted-foreground">
           <strong>🔒 Security Note:</strong> All feature toggles are enforced
           at the server level. Even if someone modifies the frontend code, the
@@ -221,7 +230,7 @@ function AdminModes() {
           </code>{" "}
           response.
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }

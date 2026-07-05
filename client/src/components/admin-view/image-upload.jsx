@@ -1,9 +1,8 @@
-import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
+import { UploadCloudIcon, XIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useEffect, useRef } from "react";
 import { Button } from "../ui/button";
-import axios from "axios";
 import { Skeleton } from "../ui/skeleton";
 import api from "@/utils/api";
 
@@ -19,11 +18,11 @@ function ProductImageUpload({
 }) {
   const inputRef = useRef(null);
 
-
   function handleImageFileChange(event) {
     const selectedFile = event.target.files?.[0];
-
-    if (selectedFile) setImageFile(selectedFile);
+    if (selectedFile && selectedFile.type.startsWith("image/")) {
+      setImageFile(selectedFile);
+    }
   }
 
   function handleDragOver(event) {
@@ -33,7 +32,9 @@ function ProductImageUpload({
   function handleDrop(event) {
     event.preventDefault();
     const droppedFile = event.dataTransfer.files?.[0];
-    if (droppedFile) setImageFile(droppedFile);
+    if (droppedFile && droppedFile.type.startsWith("image/")) {
+      setImageFile(droppedFile);
+    }
   }
 
   function handleRemoveImage() {
@@ -65,12 +66,14 @@ function ProductImageUpload({
     if (imageFile !== null) uploadImageToCloudinary();
   }, [imageFile]);
 
-  // Show either the newly selected file OR the already uploaded image URL
   const hasImage = imageFile !== null || (uploadedImageUrl && uploadedImageUrl !== "");
+
+  // Build preview URL: use uploaded cloudinary URL, or local blob preview for newly selected file
+  const previewUrl = uploadedImageUrl || (imageFile ? URL.createObjectURL(imageFile) : null);
 
   return (
     <div
-      className={`w-full  mt-4 ${isCustomStyling ? "" : "max-w-md mx-auto"}`}
+      className={`w-full mt-4 ${isCustomStyling ? "" : "max-w-md mx-auto"}`}
     >
       <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
       <div
@@ -81,6 +84,7 @@ function ProductImageUpload({
         <Input
           id="image-upload"
           type="file"
+          accept="image/*"
           className="hidden"
           ref={inputRef}
           onChange={handleImageFileChange}
@@ -92,18 +96,26 @@ function ProductImageUpload({
           >
             <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
             <span>Drag & drop or click to upload image</span>
+            <span className="text-xs text-muted-foreground mt-1">PNG, JPG, WEBP accepted</span>
           </Label>
         ) : imageLoadingState ? (
-          <Skeleton className="h-10 bg-gray-100" />
+          <div className="flex flex-col items-center justify-center h-32 gap-2">
+            <Skeleton className="h-20 w-20 rounded-md bg-gray-100" />
+            <p className="text-sm text-muted-foreground">Uploading...</p>
+          </div>
         ) : (
           <div className="flex flex-col items-center justify-center">
-            {uploadedImageUrl && !imageFile ? (
-               <img src={uploadedImageUrl} alt="Product preview" className="h-32 object-contain mb-2 rounded-md" />
-            ) : (
-               <FileIcon className="w-8 text-primary h-8 mb-2" />
+            {previewUrl && (
+              <img
+                src={previewUrl}
+                alt="Product preview"
+                className="max-h-48 object-contain mb-3 rounded-md"
+              />
             )}
             <div className="flex items-center justify-between w-full">
-              <p className="text-sm font-medium line-clamp-1">{imageFile ? imageFile.name : "Current Image"}</p>
+              <p className="text-sm font-medium line-clamp-1">
+                {imageFile ? imageFile.name : "Current Image"}
+              </p>
               <Button
                 variant="ghost"
                 size="icon"

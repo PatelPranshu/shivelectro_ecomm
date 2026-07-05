@@ -34,6 +34,11 @@ const addProduct = async (req, res) => {
       totalStock,
       averageReview,
       isFeature,
+      freeDelivery,
+      warranty,
+      cashOnDelivery,
+      returnPolicy,
+      secureTransaction,
     } = req.body;
 
     console.log(averageReview, "averageReview");
@@ -49,6 +54,11 @@ const addProduct = async (req, res) => {
       totalStock,
       averageReview,
       isFeature,
+      freeDelivery: freeDelivery || false,
+      warranty: warranty || "",
+      cashOnDelivery: cashOnDelivery || false,
+      returnPolicy: returnPolicy || "",
+      secureTransaction: secureTransaction || false,
     });
 
     await newlyCreatedProduct.save();
@@ -98,6 +108,11 @@ const editProduct = async (req, res) => {
       totalStock,
       averageReview,
       isFeature,
+      freeDelivery,
+      warranty,
+      cashOnDelivery,
+      returnPolicy,
+      secureTransaction,
     } = req.body;
 
     let findProduct = await Product.findById(id);
@@ -118,6 +133,13 @@ const editProduct = async (req, res) => {
     findProduct.image = image || findProduct.image;
     findProduct.averageReview = averageReview || findProduct.averageReview;
     findProduct.isFeature = isFeature !== undefined ? isFeature : findProduct.isFeature;
+    
+    // Update feature toggles
+    findProduct.freeDelivery = freeDelivery !== undefined ? freeDelivery : findProduct.freeDelivery;
+    findProduct.warranty = warranty !== undefined ? warranty : findProduct.warranty;
+    findProduct.cashOnDelivery = cashOnDelivery !== undefined ? cashOnDelivery : findProduct.cashOnDelivery;
+    findProduct.returnPolicy = returnPolicy !== undefined ? returnPolicy : findProduct.returnPolicy;
+    findProduct.secureTransaction = secureTransaction !== undefined ? secureTransaction : findProduct.secureTransaction;
 
     await findProduct.save();
     res.status(200).json({
