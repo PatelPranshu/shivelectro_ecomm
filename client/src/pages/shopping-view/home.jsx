@@ -6,17 +6,15 @@ import {
   MapPin,
   Phone,
   Smartphone,
-  Zap,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllFilteredProducts,
-  fetchProductDetails,
 } from "@/store/shop/products-slice";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
 import SEO from "@/components/common/SEO";
@@ -25,11 +23,11 @@ import { getOptimizedImageUrl } from "@/lib/cloudinary-url";
 
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { productList, productDetails } = useSelector(
+  const { productList } = useSelector(
     (state) => state.shopProducts
   );
   const { featureImageList } = useSelector((state) => state.commonFeature);
-  const { categories, brands } = useSelector((state) => state.taxonomy);
+  const { categories } = useSelector((state) => state.taxonomy);
 
   function handleNavigateToListingPage(filterSection, filterItem) {
     sessionStorage.removeItem("filters");
@@ -172,7 +170,7 @@ function ShoppingHome() {
 
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Shop by Category</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">view by Category</h2>
           <div className="flex flex-wrap justify-center gap-4">
             {categories && categories.length > 0 ? categories.map((categoryItem) => (
               <Card
@@ -191,7 +189,7 @@ function ShoppingHome() {
         </div>
       </section>
 
-      <section className="py-12 bg-gray-50">
+      {/* <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">Shop by Brand</h2>
           <div className="flex flex-wrap justify-center gap-4">
@@ -208,7 +206,7 @@ function ShoppingHome() {
             )) : null}
           </div>
         </div>
-      </section>
+      </section> */}
 
       
       
