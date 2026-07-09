@@ -200,7 +200,7 @@ function ShoppingListing() {
         <div className="hidden md:block">
           <ProductFilter filters={filters} handleFilter={handleFilter} />
         </div>
-        <div className="bg-background w-full md:rounded-xl md:shadow-sm md:border">
+        <div className="bg-background w-full md:rounded-2xl md:shadow-md md:border-transparent">
         <div className="p-4 border-b flex items-center justify-between">
           <h2 className="text-lg font-extrabold">All Products</h2>
           <div className="flex items-center gap-3">
@@ -235,7 +235,7 @@ function ShoppingListing() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 p-2 md:p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 p-4 md:p-6">
           {isLoading ? (
             <div className="col-span-full flex justify-center items-center h-[50vh]">
               <div className="loader"></div>

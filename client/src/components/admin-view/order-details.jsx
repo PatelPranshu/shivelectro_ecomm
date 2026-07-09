@@ -79,6 +79,14 @@ function AdminOrderDetailsView({ orderDetails }) {
             <Label>₹{orderDetails?.totalAmount.toFixed(2)}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
+            <p className="font-medium">Payment Method</p>
+            <Label>{orderDetails?.paymentMethod}</Label>
+          </div>
+          <div className="flex mt-2 items-center justify-between">
+            <p className="font-medium">Payment ID</p>
+            <Label>{orderDetails?.paymentId || "N/A"}</Label>
+          </div>
+          <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Status</p>
             <Label>
               <Badge

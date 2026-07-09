@@ -11,10 +11,10 @@ const initialState = {
 // --- ADDED --- Creates the order on Razorpay's servers
 export const createRazorpayOrder = createAsyncThunk(
   "/order/createRazorpayOrder",
-  async ({ amount }) => {
+  async ({ cartId }) => {
     const response = await api.post(
       "/shop/order/create-razorpay-order",
-      { amount }
+      { cartId }
     );
     return response.data;
   }

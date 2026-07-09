@@ -64,7 +64,34 @@ const updateOrderStatus = async (req, res) => {
       });
     }
 
+    const previousStatus = order.orderStatus;
+
     await Order.findByIdAndUpdate(id, { orderStatus });
+
+    // ENTERPRISE FIX: Stock management based on status change
+    const isRestockStatus = (status) => ['rejected', 'cancelled', 'returned'].includes(status.toLowerCase());
+    const wasRestocked = isRestockStatus(previousStatus);
+    const willBeRestocked = isRestockStatus(orderStatus);
+
+    const Product = require("../../models/Product");
+
+    if (!wasRestocked && willBeRestocked) {
+      // Stock needs to be added back
+      for (let item of order.cartItems) {
+        await Product.updateOne(
+          { _id: item.productId },
+          { $inc: { totalStock: item.quantity } }
+        );
+      }
+    } else if (wasRestocked && !willBeRestocked) {
+      // Stock needs to be deducted again
+      for (let item of order.cartItems) {
+        await Product.updateOne(
+          { _id: item.productId },
+          { $inc: { totalStock: -item.quantity } }
+        );
+      }
+    }
 
     res.status(200).json({
       success: true,

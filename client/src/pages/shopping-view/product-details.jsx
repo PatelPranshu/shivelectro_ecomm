@@ -440,12 +440,14 @@ function ProductDetailsPage() {
             >
               Other Details
             </TabsTrigger>
-            <TabsTrigger 
-              value="reviews" 
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent px-0 py-3 font-semibold text-base"
-            >
-              Reviews ({reviews?.length || 0})
-            </TabsTrigger>
+            {siteConfig?.showReviews !== false && (
+              <TabsTrigger 
+                value="reviews" 
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent px-0 py-3 font-semibold text-base"
+              >
+                Reviews ({reviews?.length || 0})
+              </TabsTrigger>
+            )}
           </TabsList>
           
           <div className="py-8">
@@ -494,8 +496,8 @@ function ProductDetailsPage() {
               )}
             </TabsContent>
             
-            <TabsContent value="reviews" className="mt-0 outline-none">
-              {siteConfig?.showReviews ? (
+            {siteConfig?.showReviews !== false && (
+              <TabsContent value="reviews" className="mt-0 outline-none">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                   <div className="lg:col-span-2">
                     <h3 className="font-bold text-xl mb-6">Customer Reviews</h3>
@@ -560,10 +562,8 @@ function ProductDetailsPage() {
                     </div>
                   </div>
                 </div>
-              ) : (
-                <p>Reviews are currently disabled.</p>
-              )}
-            </TabsContent>
+              </TabsContent>
+            )}
           </div>
         </Tabs>
       </div>

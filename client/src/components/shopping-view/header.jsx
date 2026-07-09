@@ -129,8 +129,8 @@ function HeaderRightContent({ closeMenu }) {
         {isAuthenticated ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Avatar className="bg-black cursor-pointer">
-                <AvatarFallback className="bg-black text-white font-extrabold">
+              <Avatar className="bg-slate-900 cursor-pointer">
+                <AvatarFallback className="bg-slate-900 text-white font-extrabold">
                   {user?.userName?.[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -170,7 +170,7 @@ function ShoppingHeader({ hideRightContent = false }) {
   const navigate = useNavigate();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md transition-all">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex lg:flex-1 items-center">
           <Link to="/shop/home" className="flex items-center">
@@ -211,8 +211,8 @@ function ShoppingHeader({ hideRightContent = false }) {
                           navigate("/shop/account");
                         }}
                       >
-                        <Avatar className="h-7 w-7 bg-black">
-                          <AvatarFallback className="bg-black text-white font-extrabold text-xs">
+                        <Avatar className="h-7 w-7 bg-slate-900">
+                          <AvatarFallback className="bg-slate-900 text-white font-extrabold text-xs">
                             {user?.userName?.[0]?.toUpperCase()}
                           </AvatarFallback>
                         </Avatar>

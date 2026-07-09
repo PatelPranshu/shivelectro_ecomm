@@ -13,9 +13,9 @@ function ShoppingProductTile({
   const { categoryOptionsMap, brandOptionsMap } = useSelector((state) => state.taxonomy);
 
   return (
-    <Card className="w-full max-w-sm mx-auto cursor-pointer overflow-hidden rounded-lg border bg-white shadow-sm transition-colors hover:border-blue-200">
+    <Card className="w-full max-w-sm mx-auto cursor-pointer overflow-hidden rounded-2xl border bg-card shadow-sm transition-all hover:shadow-md hover:-translate-y-1">
       <div onClick={() => handleGetProductDetails(product?._id)}>
-        <div className="relative overflow-hidden bg-[#f4f7fa] h-[220px] md:h-[280px] w-full flex items-center justify-center p-6 md:p-4 border-b">
+        <div className="relative overflow-hidden bg-muted/30 h-[220px] md:h-[280px] w-full flex items-center justify-center p-6 md:p-4 border-b">
           <img
             src={getOptimizedImageUrl(product?.image, 400)}
             alt={product?.title || "Product image"}
@@ -88,7 +88,7 @@ function ShoppingProductTile({
           ) : (
             <Button
               onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
-              className="w-full h-9 font-medium"
+              className="w-full h-10 font-medium rounded-xl transition-transform active:scale-95"
             >
               Add to cart
             </Button>

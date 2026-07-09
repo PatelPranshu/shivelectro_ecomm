@@ -34,6 +34,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
+  const { config: siteConfig } = useSelector((state) => state.siteConfig);
 
   const { toast } = useToast();
 
@@ -205,6 +206,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           </div>
           <Separator />
           
+          {siteConfig?.showReviews !== false && (
           <div className="max-h-[300px] overflow-auto">
             <h2 className="text-xl font-bold mb-4">Reviews</h2>
             <div className="grid gap-6">
@@ -255,6 +257,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               </Button>
             </div>
           </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

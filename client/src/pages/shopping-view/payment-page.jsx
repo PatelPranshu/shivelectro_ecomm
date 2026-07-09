@@ -23,10 +23,15 @@ function PaymentPage() {
     }
 
     setStatus("Creating Razorpay order...");
-    dispatch(createRazorpayOrder({ amount: totalCartAmount }))
+    dispatch(createRazorpayOrder({ cartId: orderPayload.cartId }))
       .then((action) => {
         if (!action.payload || !action.payload.id) {
-          toast({ title: "Server error. Could not create order.", variant: "destructive" });
+          // Display the server message (e.g. stock error) or a default error
+          toast({ 
+            title: "Order Failed", 
+            description: action.payload?.message || "Could not create order. Please try again.",
+            variant: "destructive" 
+          });
           navigate("/shop/checkout");
           return;
         }

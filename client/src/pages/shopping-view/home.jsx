@@ -6,6 +6,7 @@ import {
   MapPin,
   Phone,
   Smartphone,
+  ArrowRight,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
@@ -137,7 +138,7 @@ function ShoppingHome() {
           fetchpriority={index === 0 ? "high" : undefined}
           className={`${
             index === currentSlide ? "opacity-100" : "opacity-0"
-          } absolute top-0 left-0 w-full h-full object-contain bg-[#f4f7fa] transition-opacity duration-1000`}
+          } absolute top-0 left-0 w-full h-full object-contain bg-muted/30 transition-opacity duration-1000`}
         />
       ))
     : null}
@@ -168,20 +169,21 @@ function ShoppingHome() {
   </Button>
 </div>
 
-      <section className="py-12 bg-gray-50">
+      <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">view by Category</h2>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 tracking-tight">Shop by Category</h2>
           <div className="flex flex-wrap justify-center gap-4">
             {categories && categories.length > 0 ? categories.map((categoryItem) => (
               <Card
                 onClick={() =>
                   handleNavigateToListingPage("category", categoryItem)
                 }
-                className="cursor-pointer hover:shadow-lg transition-shadow w-[160px] sm:w-[200px] lg:w-[220px]"
+                className="group cursor-pointer border border-border/50 bg-background hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 transition-all w-[160px] sm:w-[200px] lg:w-[220px] rounded-2xl overflow-hidden"
                 key={categoryItem.value}
               >
-                <CardContent className="flex flex-col items-center justify-center p-6 h-full min-h-[100px]">
-                  <span className="font-bold text-center text-lg">{categoryItem.name}</span>
+                <CardContent className="flex flex-col items-center justify-center p-6 h-full min-h-[120px] relative">
+                  <span className="font-semibold text-center text-lg text-slate-800 group-hover:text-primary transition-colors">{categoryItem.name}</span>
+                  <ArrowRight className="w-5 h-5 text-primary opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all absolute bottom-4" />
                 </CardContent>
               </Card>
             )) : null}
@@ -212,10 +214,10 @@ function ShoppingHome() {
       
 
       {productList && productList.length > 0 && productList.some((item) => item.isFeature) ? (
-        <section className="py-12">
+        <section className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-8">
-              Feature Products
+            <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 tracking-tight">
+              Featured Products
             </h2>
             <div className="flex flex-wrap justify-center gap-6">
               {productList
@@ -235,9 +237,9 @@ function ShoppingHome() {
       ) : null}
 
 
-      <section className="py-12 bg-[#f8f8f8]" id="aboutus">
+      <section className="py-16 md:py-24 bg-muted/20" id="aboutus">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">About Us</h2>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 tracking-tight">About Us</h2>
           <div className="max-w-4xl mx-auto text-gray-700 text-base leading-relaxed space-y-6">
             <p>
               SHIV ELECTRONICS has enjoyed high reputation in the Indian market
@@ -326,9 +328,9 @@ function ShoppingHome() {
         </div>
       </section>
 
-      <section className="py-12 bg-[#f8f8f8]" id="contact">
+      <section className="py-16 md:py-24 bg-background" id="contact">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 tracking-tight">
             Contact Info
           </h2>
           <div className="max-w-4xl mx-auto">

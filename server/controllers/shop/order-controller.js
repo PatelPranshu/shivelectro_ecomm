@@ -9,18 +9,49 @@ const Product = require("../../models/Product");
 // --- NEW FUNCTION --- Replaces the old createOrder
 const createRazorpayOrder = async (req, res) => {
   try {
-    const { amount } = req.body;
+    const { cartId } = req.body;
+    
+    // ENTERPRISE FIX: Fetch cart from DB instead of trusting client
+    const cart = await Cart.findById(cartId);
+    if (!cart || cart.items.length === 0) {
+      return res.status(404).json({ success: false, message: "Cart not found or empty" });
+    }
+    
+    if (cart.userId.toString() !== req.user.id) {
+       return res.status(403).json({ success: false, message: "Unauthorized cart access." });
+    }
+
+    let serverTotalAmount = 0;
+    
+    // Validate stock and calculate total amount on server
+    for (let item of cart.items) {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        return res.status(404).json({ success: false, message: `Product not found: ${item.productId}` });
+      }
+      if (product.totalStock < item.quantity) {
+        return res.status(400).json({ 
+          success: false, 
+          message: `Not enough stock for product: ${product.title}. Only ${product.totalStock} left.` 
+        });
+      }
+      const price = product.salePrice > 0 ? product.salePrice : product.price;
+      serverTotalAmount += price * item.quantity;
+    }
+
     const options = {
-      amount: Number(amount * 100), // amount in the smallest currency unit (paise)
+      amount: Number(serverTotalAmount * 100), // amount calculated securely on server
       currency: "INR",
       receipt: `receipt_order_${new Date().getTime()}`,
     };
+    
     const order = await razorpayInstance.orders.create(options);
     if (!order) {
         return res.status(500).send("Error creating Razorpay order");
     }
     res.json(order);
   } catch (error) {
+    console.error("Razorpay Create Error:", error);
     res.status(500).send(error);
   }
 };
@@ -49,53 +80,97 @@ const verifyRazorpayPayment = async (req, res) => {
       return res.status(400).json({ success: false, message: "Payment verification failed. Signature mismatch." });
     }
 
-    // --- LOGIC MOVED HERE ---
-    // If signature is valid, now we create and save the order, update stock, and clear the cart.
-    const { userId, cartItems, addressInfo, totalAmount, cartId } = orderPayload;
+    // ENTERPRISE FIX: Trust database and token, not client payload.
+    const { addressInfo, cartId } = orderPayload;
+    const userId = req.user.id; // Use authenticated user ID
+    
+    const cart = await Cart.findById(cartId);
+    if (!cart || cart.items.length === 0) {
+      return res.status(404).json({ success: false, message: "Cart not found or empty." });
+    }
+    
+    if (cart.userId.toString() !== userId) {
+       return res.status(403).json({ success: false, message: "Unauthorized cart access." });
+    }
 
-    // SECURITY FIX: Verify total amount from DB to prevent client-side tampering
+    // Calculate expected amount on server
     let expectedTotalAmount = 0;
-    for (let item of cartItems) {
+    for (let item of cart.items) {
       const product = await Product.findById(item.productId);
       if (!product) {
-        return res.status(404).json({ success: false, message: `Product not found: ${item.title}` });
+        return res.status(404).json({ success: false, message: `Product not found: ${item.productId}` });
       }
       const price = product.salePrice > 0 ? product.salePrice : product.price;
       expectedTotalAmount += price * item.quantity;
     }
 
-    // Allow small float precision difference, but reject intentional tampering
-    if (Math.abs(expectedTotalAmount - totalAmount) > 1) {
-      return res.status(400).json({ success: false, message: "Payment verification failed. Amount mismatch." });
+    // CRITICAL SECURITY FIX: Verify the Razorpay order itself
+    const razorpayOrder = await razorpayInstance.orders.fetch(razorpay_order_id);
+    if (!razorpayOrder) {
+      return res.status(400).json({ success: false, message: "Razorpay order not found." });
     }
+    
+    if (razorpayOrder.amount !== expectedTotalAmount * 100) {
+      return res.status(400).json({ success: false, message: "Payment verification failed. Amount mismatch with Razorpay." });
+    }
+
+    // Deduct stock atomically with verification and rollback
+    const successfullyDeducted = [];
+    let outOfStockError = null;
+
+    for (let item of cart.items) {
+      const updateResult = await Product.updateOne(
+        { _id: item.productId, totalStock: { $gte: item.quantity } },
+        { $inc: { totalStock: -item.quantity } }
+      );
+      if (updateResult.modifiedCount === 0) {
+        // Stock went out exactly between order creation and payment
+        outOfStockError = `Product out of stock during payment: ${item.productId}`;
+        break; // Stop deducting!
+      } else {
+        successfullyDeducted.push(item);
+      }
+    }
+
+    if (outOfStockError) {
+       // Rollback the previously deducted stock
+       for (let item of successfullyDeducted) {
+           await Product.updateOne(
+              { _id: item.productId },
+              { $inc: { totalStock: item.quantity } }
+           );
+       }
+       return res.status(400).json({ success: false, message: outOfStockError });
+    }
+
+    // Map cart items for the order document
+    const cartItemsData = await Promise.all(cart.items.map(async (item) => {
+       const product = await Product.findById(item.productId);
+       return {
+         productId: item.productId,
+         title: product.title,
+         image: product.image,
+         price: (product.salePrice > 0 ? product.salePrice : product.price).toString(),
+         quantity: item.quantity
+       };
+    }));
 
     const newOrder = new Order({
       userId,
       cartId,
-      cartItems,
+      cartItems: cartItemsData,
       addressInfo,
       orderStatus: 'Pending',
       paymentMethod: 'Razorpay',
       paymentStatus: 'Paid',
-      totalAmount,
+      totalAmount: expectedTotalAmount,
       orderDate: new Date(),
       orderUpdateDate: new Date(),
-      paymentDetails: {
-          razorpay_order_id,
-          razorpay_payment_id,
-          razorpay_signature,
-      }
+      paymentId: razorpay_payment_id,
+      payerId: razorpay_order_id,
     });
 
     await newOrder.save();
-
-    // Update product stock
-    for (let item of newOrder.cartItems) {
-      await Product.updateOne(
-        { _id: item.productId },
-        { $inc: { totalStock: -item.quantity } }
-      );
-    }
     
     // Clear the user's cart
     await Cart.findByIdAndDelete(cartId);
